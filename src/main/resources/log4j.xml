@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+        <!-- for details of this file format and content please refer to 
+                http://wiki.apache.org/logging-log4j/Log4jXmlFormat
+        -->
+
+        <appender name="productionLog" class="org.apache.log4j.DailyRollingFileAppender">
+                <!-- Attention, current only ${JWEBSOCKET_HOME} is supported as env var -->
+                <param name="file" value="${JWEBSOCKET_HOME}/logs/jWebSocket.log" />
+                <!-- specify whether to use write cache (buffer) or not, recommended for production -->
+                <param name="bufferedIO" value="true" />
+                <!-- size of IO buffer, when writing to file, recommended for production -->
+                <param name="bufferSize" value="16384" />
+                <!-- date pattern controls the roll-over not the date format -->
+                <param name="datePattern" value="'.'yyyy-MM-dd"/>
+                <param name="append" value="true" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+                </layout>
+        </appender>
+        
+        <appender name="developmentLog" class="org.apache.log4j.ConsoleAppender">
+                <param name="threshold" value="debug"/>
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+                </layout>
+        </appender>
+        
+        <appender name="debugLog" class="org.apache.log4j.DailyRollingFileAppender">
+                <!-- Attention, currently only ${JWEBSOCKET_HOME} is supported as env var -->
+                <param name="file" value="${JWEBSOCKET_HOME}/logs/jWebSocket.log" />
+                <!-- specify whether to use write cache (buffer) or not, not recommended for debug -->
+                <param name="bufferedIO" value="false" />
+                <!-- size of IO buffer, when writing to file, not recommended for debug -->
+                <param name="bufferSize" value="16384" />
+                <!-- date pattern controls the roll-over not the date format -->
+                <param name="datePattern" value="'.'yyyy-MM-dd"/>
+                <param name="threshold" value="debug"/>
+                <param name="append" value="true" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+                </layout>
+        </appender>
+        
+        <!-- this log setting is used for the automated tests -->
+        <appender name="testLog" class="org.apache.log4j.FileAppender">
+                <!-- Attention, currently only ${JWEBSOCKET_HOME} is supported as env var -->
+                <param name="file" value="${JWEBSOCKET_HOME}/logs/jWebSocket_AutomatedTests.log" />
+                <!-- specify whether to use write cache (buffer) or not, not recommended for debug -->
+                <param name="bufferedIO" value="false" />
+                <!-- size of IO buffer, when writing to file, not recommended for debug -->
+                <param name="bufferSize" value="16384" />
+                <!-- date pattern controls the roll-over not the date format -->
+                <param name="datePattern" value="'.'yyyy-MM-dd"/>
+                <param name="threshold" value="debug"/>
+                <param name="append" value="true" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+                </layout>
+        </appender>
+        
+        <!-- send all error logs to my email address -->
+        <appender name="mailLog" class="org.apache.log4j.net.SMTPAppender">
+            <!-- send only errors per email -->
+                <param name="threshold" value="error" />
+                <!-- insert hostname of your mail server -->
+                <param name="SMTPHost" value="localhost" />
+                <!-- insert password to send mails via the SMTP server -->
+                <param name="SMTPUsername" value="your SMTP username" />
+                <!-- insert password to send mails via the SMTP server -->
+                <param name="SMTPPassword" value="your SMTP password" />
+                <!-- insert from address in the mails (sender) -->
+                <param name="from" value="jWebSocketServer@yourdomain.tld" />
+                <!-- insert to address for the mails (receiver) -->
+                <param name="to" value="admin@yourdomain.tld" />
+                <!-- insert to subject for the mails -->
+                <param name="subject" value="jWebSocket Server Error Report" />
+            <!-- if the buffer contains xx mails, the email should be sent -->
+                <param name="bufferSize" value="10" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+                </layout>
+        </appender>        
+        
+        <appender name="adminLog" class="org.apache.log4j.RollingFileAppender">
+                <!-- Attention, currently only ${JWEBSOCKET_HOME} is supported as env var -->
+                <param name="file" value="${JWEBSOCKET_HOME}/logs/adminLog.log" />
+                <param name="MaxFileSize" value="60KB"/>
+                <param name="threshold" value="info"/>
+                <param name="append" value="true" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd | HH:mm:ss} %m%n" />
+                </layout>
+        </appender>
+        
+        <appender name="jmxLog" class="org.apache.log4j.RollingFileAppender">
+                <!-- Attention, currently only ${JWEBSOCKET_HOME} is supported as env var -->
+                <param name="file" value="${JWEBSOCKET_HOME}/logs/jmxLog.log" />
+                <param name="MaxFileSize" value="60KB"/>
+                <param name="threshold" value="DEBUG"/>
+                <param name="append" value="true" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+                </layout>
+        </appender>
+
+        <logger name="org.springframework" additivity="false">
+                <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+                <level value="WARN"/>
+                <!-- Select one of the above declared appenders -->
+                <appender-ref ref="developmentLog"/>
+        </logger>
+
+
+        <logger name="org.jwebsocket" additivity="false">
+                <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+                <level value="DEBUG"/>
+                <!--  select one of the above declared appenders -->
+                <appender-ref ref="developmentLog"/>
+        </logger>
+        
+        <logger name="org.jwebsocket.plugins.admin" additivity="false">
+                <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+                <level value="INFO"/>
+                <!--  select one of the above declared appenders -->
+                <appender-ref ref="adminLog"/>
+        </logger>
+        
+        <logger name="org.jwebsocket.plugins.jmx" additivity="false">
+                <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+                <level value="DEBUG"/>
+                <!--  select one of the above declared appenders -->
+                <appender-ref ref="jmxLog"/>
+                <appender-ref ref="developmentLog"/>
+        </logger>
+
+        <root>
+                <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+                <priority value="DEBUG" />
+                <!-- select one of the above declared appenders -->
+                <!-- for automated tests: -->
+                <!-- <appender-ref ref="testLog" /> -->
+                <!-- during the development -->
+                <appender-ref ref="developmentLog"/>
+                <appender-ref ref="jmxLog"/>
+        </root>
+
+</log4j:configuration>
