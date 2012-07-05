@@ -1,0 +1,29 @@
+## Generic
+*~
+*.lock
+*.swp
+*.out
+
+## Java
+build/
+classes/
+*.class
+dist/
+target/
+lib/
+*.jar
+
+## Netbeans
+nbproject/*
+!nbproject/project.xml
+!nbproject/project.properties
+
+## Eclipse
+.metadata/
+.settings/
+.classpath
+.project
+.wtpmodules
+Servers/
+bin/
+gen/
