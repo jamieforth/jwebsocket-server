@@ -27,79 +27,79 @@ import org.jwebsocket.api.IBasicCacheStorage;
  */
 public class MongoDBCacheStorageBuilder {
 
-        private Mongo mCon;
-        private String mDatabaseName;
-        private String mCollectionName;
-        public static final String V1 = "v1";
-        public static final String V2 = "v2";
-        private DBCollection mCollection = null;
-        private DB mDatabase = null;
+    private Mongo mCon;
+    private String mDatabaseName;
+    private String mCollectionName;
+    public static final String V1 = "v1";
+    public static final String V2 = "v2";
+    private DBCollection mCollection = null;
+    private DB mDatabase = null;
 
-        /**
-         * 
-         * @return The Mongo database connection
-         */
-        public Mongo getCon() {
-                return mCon;
+    /**
+     * 
+     * @return The Mongo database connection
+     */
+    public Mongo getCon() {
+        return mCon;
+    }
+
+    /**
+     * 
+     * @param aCon The Mongo database connection to set
+     */
+    public void setCon(Mongo aCon) {
+        this.mCon = aCon;
+    }
+
+    /**
+     * 
+     * @param aName The cache storage name to build
+     * @return The cache storage ready to use.
+     */
+    public IBasicCacheStorage<String, Object> getCacheStorage(String aVersion, String aName) throws Exception {
+        IBasicCacheStorage<String, Object> lCache = null;
+        if (aVersion.equals(V1)) {
+            lCache = new MongoDBCacheStorageV1<String, Object>(aName, mDatabase);
+            lCache.initialize();
+        } else if (aVersion.equals(V2)) {
+            lCache = new MongoDBCacheStorageV2<String, Object>(aName, mCollection);
+            lCache.initialize();
         }
 
-        /**
-         * 
-         * @param aCon The Mongo database connection to set
-         */
-        public void setCon(Mongo aCon) {
-                this.mCon = aCon;
-        }
+        return lCache;
+    }
 
-        /**
-         * 
-         * @param aName The cache storage name to build
-         * @return The cache storage ready to use.
-         */
-        public IBasicCacheStorage<String, Object> getCacheStorage(String aVersion, String aName) throws Exception {
-                IBasicCacheStorage<String, Object> lCache = null;
-                if (aVersion.equals(V1)) {
-                        lCache = new MongoDBCacheStorageV1<String, Object>(aName, mDatabase);
-                        lCache.initialize();
-                } else if (aVersion.equals(V2)) {
-                        lCache = new MongoDBCacheStorageV2<String, Object>(aName, mCollection);
-                        lCache.initialize();
-                }
+    /**
+     * @return the databaseName
+     */
+    public String getDatabaseName() {
+        return mDatabaseName;
+    }
 
-                return lCache;
-        }
+    /**
+     * @param databaseName the databaseName to set
+     */
+    public void setDatabaseName(String aDatabaseName) {
+        this.mDatabaseName = aDatabaseName;
 
-        /**
-         * @return the databaseName
-         */
-        public String getDatabaseName() {
-                return mDatabaseName;
-        }
+        //Getting the temporal database instance to improve performance
+        mDatabase = mCon.getDB(aDatabaseName);
+    }
 
-        /**
-         * @param databaseName the databaseName to set
-         */
-        public void setDatabaseName(String aDatabaseName) {
-                this.mDatabaseName = aDatabaseName;
+    /**
+     * @return The database collection name for cache storages of version 2
+     */
+    public String getCollectionName() {
+        return mCollectionName;
+    }
 
-                //Getting the temporal database instance to improve performance
-                mDatabase = mCon.getDB(aDatabaseName);
-        }
+    /**
+     * @param aCollectionName The database collection name for cache storages of version 2
+     */
+    public void setCollectionName(String aCollectionName) {
+        this.mCollectionName = aCollectionName;
 
-        /**
-         * @return The database collection name for cache storages of version 2
-         */
-        public String getCollectionName() {
-                return mCollectionName;
-        }
-
-        /**
-         * @param aCollectionName The database collection name for cache storages of version 2
-         */
-        public void setCollectionName(String aCollectionName) {
-                this.mCollectionName = aCollectionName;
-
-                //Getting the temporal collection instance to improve performance
-                mCollection = mCon.getDB(mDatabaseName).getCollection(aCollectionName);
-        }
+        //Getting the temporal collection instance to improve performance
+        mCollection = mCon.getDB(mDatabaseName).getCollection(aCollectionName);
+    }
 }

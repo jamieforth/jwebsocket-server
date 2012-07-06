@@ -33,21 +33,21 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
     private static CacheManager mCacheManager = null;
     private Cache mCache = null;
 
-        public Cache getCache() {
-                return mCache;
-        }
+    public Cache getCache() {
+        return mCache;
+    }
 
-        public void setCache(Cache aCache) {
-                this.mCache = aCache;
-        }
-        
+    public void setCache(Cache aCache) {
+        this.mCache = aCache;
+    }
+    
     /**
      * 
      * @param aName
      */
     public EhCacheStorage(String aName) {
-        mName = aName;
-        initialize();
+    mName = aName;
+    initialize();
     }
 
     /**
@@ -56,7 +56,7 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public String getName() {
-        return mName;
+    return mName;
     }
 
     /**
@@ -65,7 +65,7 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public void setName(String aName) throws Exception {
-        mName = aName;
+    mName = aName;
     }
 
     /**
@@ -74,9 +74,9 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public Set keySet() {
-        Set lKeys = new FastSet();
-        lKeys.addAll(mCache.getKeys());
-        return lKeys;
+    Set lKeys = new FastSet();
+    lKeys.addAll(mCache.getKeys());
+    return lKeys;
     }
 
     /**
@@ -85,7 +85,7 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public int size() {
-        return mCache.getSize();
+    return mCache.getSize();
     }
 
     /**
@@ -94,8 +94,8 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public V get(Object aKey) {
-        Element lElement = mCache.get(aKey);
-        return (lElement != null ? (V)lElement.getObjectValue() : null);
+    Element lElement = mCache.get(aKey);
+    return (lElement != null ? (V)lElement.getObjectValue() : null);
     }
 
     /**
@@ -104,11 +104,11 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public V remove(Object aKey) {
-        // TODO: The interface specs that a previous object is supposed to be returned
-        // this may not be desired and reduce performance, provide second message
-        V lRes = (V)mCache.get(aKey);
-        mCache.remove(aKey);
-        return lRes;
+    // TODO: The interface specs that a previous object is supposed to be returned
+    // this may not be desired and reduce performance, provide second message
+    V lRes = (V)mCache.get(aKey);
+    mCache.remove(aKey);
+    return lRes;
     }
 
     /**
@@ -116,7 +116,7 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public void clear() {
-        mCache.removeAll();
+    mCache.removeAll();
     }
 
     /**
@@ -125,19 +125,19 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public Object put(Object aKey, Object aData) {
-        Element lElement = new Element(aKey, aData);
-        mCache.put(lElement);
-                
-        return aData;
+    Element lElement = new Element(aKey, aData);
+    mCache.put(lElement);
+        
+    return aData;
     }
 
     /**
-         *
-         * {@inheritDoc }
-         */
+     *
+     * {@inheritDoc }
+     */
     @Override
     public boolean containsKey(Object aKey) {
-        return mCache.get(aKey) != null;
+    return mCache.get(aKey) != null;
     }
 
     /**
@@ -146,13 +146,13 @@ public class EhCacheStorage<K, V> extends BaseStorage<K, V> {
      */
     @Override
     public void initialize() {
-        mCacheManager = EhCacheManager.getInstance();
-        if (mCacheManager != null) {
-            // TODO: think about how to configure or pass settings to this cache.
-            if (!mCacheManager.cacheExists(mName)) {
-                mCacheManager.addCache(mName);
-            }
-            mCache = mCacheManager.getCache(mName);
+    mCacheManager = EhCacheManager.getInstance();
+    if (mCacheManager != null) {
+        // TODO: think about how to configure or pass settings to this cache.
+        if (!mCacheManager.cacheExists(mName)) {
+        mCacheManager.addCache(mName);
         }
+        mCache = mCacheManager.getCache(mName);
+    }
     }
 }

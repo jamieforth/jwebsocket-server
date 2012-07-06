@@ -33,140 +33,140 @@ import org.jwebsocket.storage.BaseStorage;
  */
 public class MongoDBStorageV2<K, V> extends BaseStorage<K, V> {
 
-        private String mName;
-        private DBCollection mCollection;
+    private String mName;
+    private DBCollection mCollection;
 
-        /**
-         * Create a new MongoDBStorage instance
-         *
-         * @param aName The name of the storage container
-         * @param aCollection The MongoDB database collection instance
-         */
-        public MongoDBStorageV2(String aName, DBCollection aCollection) {
-                this.mName = aName;
-                mCollection = aCollection;
+    /**
+     * Create a new MongoDBStorage instance
+     *
+     * @param aName The name of the storage container
+     * @param aCollection The MongoDB database collection instance
+     */
+    public MongoDBStorageV2(String aName, DBCollection aCollection) {
+        this.mName = aName;
+        mCollection = aCollection;
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public void initialize() throws Exception {
+        mCollection.ensureIndex(new BasicDBObject().append("ns", 1).append("k", 1),
+                new BasicDBObject().append("unique", true));
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public String getName() {
+        return mName;
+    }
+
+    /**
+     * {@inheritDoc
+     *
+     * @param aNewName
+     */
+    @Override
+    public void setName(String aNewName) throws Exception {
+        mCollection.update(new BasicDBObject().append("ns", mName),
+                new BasicDBObject().append("$set", new BasicDBObject().append("ns", aNewName)));
+
+        mName = aNewName;
+    }
+
+    /**
+     * {@inheritDoc
+     *
+     * @param aKey
+     */
+    @Override
+    public boolean containsKey(Object aKey) {
+        DBObject lRecord = mCollection.findOne(new BasicDBObject().append("ns", mName).append("k", (String) aKey));
+        if (lRecord != null) {
+            return true;
         }
+        return false;
+    }
 
-        /**
-         * {@inheritDoc
-         */
-        @Override
-        public void initialize() throws Exception {
-                mCollection.ensureIndex(new BasicDBObject().append("ns", 1).append("k", 1),
-                                new BasicDBObject().append("unique", true));
+    /**
+     * {@inheritDoc
+     *
+     * @param aValue
+     */
+    @Override
+    public boolean containsValue(Object aValue) {
+        DBObject lRecord = mCollection.findOne(new BasicDBObject().append("ns", mName).append("v", aValue));
+        if (lRecord != null) {
+            return true;
         }
+        return false;
+    }
 
-        /**
-         * {@inheritDoc
-         */
-        @Override
-        public String getName() {
-                return mName;
+    /**
+     * {@inheritDoc
+     *
+     * @param aKey
+     */
+    @Override
+    public V get(Object aKey) {
+        return (V) mCollection.findOne(new BasicDBObject().append("ns", mName).append("k", aKey)).get("v");
+    }
+
+    @Override
+    public V put(K aKey, V aValue) {
+        BasicDBObject lRecord = new BasicDBObject();
+        lRecord.append("ns", mName);
+        lRecord.append("k", aKey);
+
+        DBCursor lCursor = mCollection.find(lRecord);
+        if (!lCursor.hasNext()) {
+            lRecord.append("v", aValue);
+            mCollection.insert(lRecord);
+        } else {
+            DBObject lExistingRecord = lCursor.next();
+            lExistingRecord.put("v", aValue);
+            mCollection.save(lExistingRecord);
         }
+        return aValue;
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @param aNewName
-         */
-        @Override
-        public void setName(String aNewName) throws Exception {
-                mCollection.update(new BasicDBObject().append("ns", mName),
-                                new BasicDBObject().append("$set", new BasicDBObject().append("ns", aNewName)));
-
-                mName = aNewName;
+    /**
+     * {@inheritDoc
+     *
+     * @param aKey
+     */
+    @Override
+    public V remove(Object aKey) {
+        if (containsKey(aKey)) {
+            V lValue = get(aKey);
+            mCollection.remove(new BasicDBObject().append("ns", mName).append("k", aKey));
+            return lValue;
+        } else {
+            throw new IndexOutOfBoundsException();
         }
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @param aKey
-         */
-        @Override
-        public boolean containsKey(Object aKey) {
-                DBObject lRecord = mCollection.findOne(new BasicDBObject().append("ns", mName).append("k", (String) aKey));
-                if (lRecord != null) {
-                        return true;
-                }
-                return false;
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public void clear() {
+        mCollection.remove(new BasicDBObject().append("ns", mName));
+    }
+
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public Set<K> keySet() {
+        Set<K> lKeySet = new FastSet<K>();
+        DBCursor lCursor = mCollection.find(new BasicDBObject().append("ns", mName));
+        while (lCursor.hasNext()) {
+            lKeySet.add((K) lCursor.next().get("k"));
         }
-
-        /**
-         * {@inheritDoc
-         *
-         * @param aValue
-         */
-        @Override
-        public boolean containsValue(Object aValue) {
-                DBObject lRecord = mCollection.findOne(new BasicDBObject().append("ns", mName).append("v", aValue));
-                if (lRecord != null) {
-                        return true;
-                }
-                return false;
-        }
-
-        /**
-         * {@inheritDoc
-         *
-         * @param aKey
-         */
-        @Override
-        public V get(Object aKey) {
-                return (V) mCollection.findOne(new BasicDBObject().append("ns", mName).append("k", aKey)).get("v");
-        }
-
-        @Override
-        public V put(K aKey, V aValue) {
-                BasicDBObject lRecord = new BasicDBObject();
-                lRecord.append("ns", mName);
-                lRecord.append("k", aKey);
-
-                DBCursor lCursor = mCollection.find(lRecord);
-                if (!lCursor.hasNext()) {
-                        lRecord.append("v", aValue);
-                        mCollection.insert(lRecord);
-                } else {
-                        DBObject lExistingRecord = lCursor.next();
-                        lExistingRecord.put("v", aValue);
-                        mCollection.save(lExistingRecord);
-                }
-                return aValue;
-        }
-
-        /**
-         * {@inheritDoc
-         *
-         * @param aKey
-         */
-        @Override
-        public V remove(Object aKey) {
-                if (containsKey(aKey)) {
-                        V lValue = get(aKey);
-                        mCollection.remove(new BasicDBObject().append("ns", mName).append("k", aKey));
-                        return lValue;
-                } else {
-                        throw new IndexOutOfBoundsException();
-                }
-        }
-
-        /**
-         * {@inheritDoc
-         */
-        @Override
-        public void clear() {
-                mCollection.remove(new BasicDBObject().append("ns", mName));
-        }
-
-        /**
-         * {@inheritDoc
-         */
-        @Override
-        public Set<K> keySet() {
-                Set<K> lKeySet = new FastSet<K>();
-                DBCursor lCursor = mCollection.find(new BasicDBObject().append("ns", mName));
-                while (lCursor.hasNext()) {
-                        lKeySet.add((K) lCursor.next().get("k"));
-                }
-                return lKeySet;
-        }
+        return lKeySet;
+    }
 }

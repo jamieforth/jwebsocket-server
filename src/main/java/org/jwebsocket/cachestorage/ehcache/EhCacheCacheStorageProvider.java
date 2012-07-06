@@ -26,16 +26,16 @@ import org.jwebsocket.storage.ehcache.EhCacheManager;
  */
 public class EhCacheCacheStorageProvider implements ICacheStorageProvider {
 
-        @Override
-        public IBasicCacheStorage<String, Object> getCacheStorage(String aName) throws Exception {
-                IBasicCacheStorage<String, Object> lStorage = new EhCacheCacheStorage(aName);
-                lStorage.initialize();
+    @Override
+    public IBasicCacheStorage<String, Object> getCacheStorage(String aName) throws Exception {
+        IBasicCacheStorage<String, Object> lStorage = new EhCacheCacheStorage(aName);
+        lStorage.initialize();
 
-                return lStorage;
-        }
+        return lStorage;
+    }
 
-        @Override
-        public void removeCacheStorage(String aName) throws Exception {
-                EhCacheManager.getInstance().removeCache(aName);
-        }
+    @Override
+    public void removeCacheStorage(String aName) throws Exception {
+        EhCacheManager.getInstance().removeCache(aName);
+    }
 }

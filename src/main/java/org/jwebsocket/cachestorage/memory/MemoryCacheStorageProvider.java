@@ -24,16 +24,16 @@ import org.jwebsocket.api.ICacheStorageProvider;
  */
 public class MemoryCacheStorageProvider implements ICacheStorageProvider {
 
-        @Override
-        public IBasicCacheStorage<String, Object> getCacheStorage(String aName) throws Exception {
-                MemoryCacheStorage<String, Object> lStorage = new MemoryCacheStorage<String, Object>(aName);
-                lStorage.initialize();
+    @Override
+    public IBasicCacheStorage<String, Object> getCacheStorage(String aName) throws Exception {
+        MemoryCacheStorage<String, Object> lStorage = new MemoryCacheStorage<String, Object>(aName);
+        lStorage.initialize();
 
-                return lStorage;
-        }
+        return lStorage;
+    }
 
-        @Override
-        public void removeCacheStorage(String aName) throws Exception {
-                MemoryCacheStorage.getContainer().remove(aName);
-        }
+    @Override
+    public void removeCacheStorage(String aName) throws Exception {
+        MemoryCacheStorage.getContainer().remove(aName);
+    }
 }

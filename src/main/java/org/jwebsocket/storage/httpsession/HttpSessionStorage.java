@@ -30,104 +30,104 @@ import org.jwebsocket.storage.BaseStorage;
  */
 public class HttpSessionStorage extends BaseStorage<String, Object> {
 
-        private String mName = null;
-        private HttpSession mSession;
+    private String mName = null;
+    private HttpSession mSession;
 
-        /**
-         *
-         * @return The HttpSession instance
-         */
-        public HttpSession getSession() {
-                return mSession;
+    /**
+     *
+     * @return The HttpSession instance
+     */
+    public HttpSession getSession() {
+        return mSession;
+    }
+
+    /**
+     *
+     * @param aSession
+     */
+    public HttpSessionStorage(HttpSession aSession) {
+        mName = aSession.getId();
+        mSession = aSession;
+
+        initialize();
+    }
+
+    /**
+     *
+     * {@inheritDoc }
+     */
+    @Override
+    public String getName() {
+        return mName;
+    }
+
+    /**
+     *
+     * {@inheritDoc }
+     */
+    @Override
+    public void setName(String aName) throws Exception {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set keySet() {
+        Set lKeys = new FastSet();
+        Enumeration<String> lSessionKeys = mSession.getAttributeNames();
+
+        while (lSessionKeys.hasMoreElements()) {
+            lKeys.add(lSessionKeys.nextElement());
         }
 
-        /**
-         *
-         * @param aSession
-         */
-        public HttpSessionStorage(HttpSession aSession) {
-                mName = aSession.getId();
-                mSession = aSession;
+        return lKeys;
+    }
 
-                initialize();
-        }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object get(Object aKey) {
+        return mSession.getAttribute(aKey.toString());
+    }
 
-        /**
-         *
-         * {@inheritDoc }
-         */
-        @Override
-        public String getName() {
-                return mName;
-        }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object remove(Object aKey) {
+        Object lRes = get(aKey);
+        mSession.removeAttribute(aKey.toString());
 
-        /**
-         *
-         * {@inheritDoc }
-         */
-        @Override
-        public void setName(String aName) throws Exception {
-                throw new UnsupportedOperationException();
-        }
+        return lRes;
+    }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Set keySet() {
-                Set lKeys = new FastSet();
-                Enumeration<String> lSessionKeys = mSession.getAttributeNames();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clear() {
+        mSession.invalidate();
+    }
 
-                while (lSessionKeys.hasMoreElements()) {
-                        lKeys.add(lSessionKeys.nextElement());
-                }
+    /**
+     *
+     * {@inheritDoc }
+     */
+    @Override
+    public Object put(String aKey, Object aData) {
+        mSession.setAttribute(aKey.toString(), aData);
 
-                return lKeys;
-        }
+        return aData;
+    }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object get(Object aKey) {
-                return mSession.getAttribute(aKey.toString());
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public Object remove(Object aKey) {
-                Object lRes = get(aKey);
-                mSession.removeAttribute(aKey.toString());
-
-                return lRes;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void clear() {
-                mSession.invalidate();
-        }
-
-        /**
-         *
-         * {@inheritDoc }
-         */
-        @Override
-        public Object put(String aKey, Object aData) {
-                mSession.setAttribute(aKey.toString(), aData);
-
-                return aData;
-        }
-
-        /**
-         *
-         * {@inheritDoc }
-         */
-        @Override
-        public void initialize() {
-        }
+    /**
+     *
+     * {@inheritDoc }
+     */
+    @Override
+    public void initialize() {
+    }
 }

@@ -25,29 +25,29 @@ import org.jwebsocket.config.JWebSocketConfig;
  */
 public class EhCacheManager {
 
-        private static CacheManager mInstance = null;
+    private static CacheManager mInstance = null;
 
-        /**
-         * Default constructor, cannot be called from outside this class.
-         */
-        private EhCacheManager() {
-        }
+    /**
+     * Default constructor, cannot be called from outside this class.
+     */
+    private EhCacheManager() {
+    }
 
-        /**
-         * Static method, returns the one and only instance
-         */
-        public static CacheManager getInstance() {
-                if (mInstance == null) {
-                        ClassLoader lClassLoader = Thread.currentThread().getContextClassLoader();
-                        mInstance = new CacheManager(JWebSocketConfig.getConfigFolder("ehcache.xml", lClassLoader));
-                }
-                return mInstance;
+    /**
+     * Static method, returns the one and only instance
+     */
+    public static CacheManager getInstance() {
+        if (mInstance == null) {
+            ClassLoader lClassLoader = Thread.currentThread().getContextClassLoader();
+            mInstance = new CacheManager(JWebSocketConfig.getConfigFolder("ehcache.xml", lClassLoader));
         }
+        return mInstance;
+    }
 
-        /**
-         * Static method, returns the one and only instance
-         */
-        public static Cache getCache(String aName) {
-                return getInstance().getCache(aName);
-        }
+    /**
+     * Static method, returns the one and only instance
+     */
+    public static Cache getCache(String aName) {
+        return getInstance().getCache(aName);
+    }
 }

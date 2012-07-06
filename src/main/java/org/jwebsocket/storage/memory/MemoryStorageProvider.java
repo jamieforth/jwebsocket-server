@@ -24,17 +24,17 @@ import org.jwebsocket.api.IStorageProvider;
  */
 public class MemoryStorageProvider implements IStorageProvider {
 
-        @Override
-        public IBasicStorage<String, Object> getStorage(String aName) throws Exception {
-                MemoryStorage<String, Object> lStorage = new MemoryStorage<String, Object>(aName);
-                lStorage.initialize();
-                
-                return lStorage;
-        }
+    @Override
+    public IBasicStorage<String, Object> getStorage(String aName) throws Exception {
+        MemoryStorage<String, Object> lStorage = new MemoryStorage<String, Object>(aName);
+        lStorage.initialize();
+        
+        return lStorage;
+    }
 
     @Override
     public void removeStorage(String aName) throws Exception {
-        MemoryStorage.getContainer().remove(aName);
+    MemoryStorage.getContainer().remove(aName);
     }
     
 }

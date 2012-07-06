@@ -27,36 +27,36 @@ import org.jwebsocket.api.IRRPCOnResponseCallback;
  */
 public class TimeoutCallbackTask extends TimerTask {
 
-        private String connectorId;
-        private String upcid;
-        private FastMap<String, FastMap<String, IRRPCOnResponseCallback>> callsMap;
-        private static Log logger = LogFactory.getLog(TimeoutCallbackTask.class);
+    private String connectorId;
+    private String upcid;
+    private FastMap<String, FastMap<String, IRRPCOnResponseCallback>> callsMap;
+    private static Log logger = LogFactory.getLog(TimeoutCallbackTask.class);
 
-        public TimeoutCallbackTask(String connectorId, String upcid, FastMap<String, FastMap<String, IRRPCOnResponseCallback>> callsMap) {
-                this.connectorId = connectorId;
-                this.upcid = upcid;
-                this.callsMap = callsMap;
+    public TimeoutCallbackTask(String connectorId, String upcid, FastMap<String, FastMap<String, IRRPCOnResponseCallback>> callsMap) {
+        this.connectorId = connectorId;
+        this.upcid = upcid;
+        this.callsMap = callsMap;
+    }
+
+    @Override
+    public void run() {
+        //Execute only if the OnResponse callback was not called before
+        if (callsMap.containsKey(connectorId)
+                && callsMap.get(connectorId).containsKey(upcid)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Calling the failure method because of a timeout reason."
+                        + " Notification: " + connectorId + ":" + upcid);
+            }
+
+            //Getting the callback
+            IRRPCOnResponseCallback aOnResponse = callsMap.get(connectorId).remove(upcid);
+
+            //Cleaning if empty
+            if (callsMap.get(connectorId).isEmpty()) {
+                callsMap.remove(connectorId);
+            }
+
+            aOnResponse.failure(FailureReason.TIMEOUT, connectorId);
         }
-
-        @Override
-        public void run() {
-                //Execute only if the OnResponse callback was not called before
-                if (callsMap.containsKey(connectorId)
-                                && callsMap.get(connectorId).containsKey(upcid)) {
-                        if (logger.isDebugEnabled()) {
-                                logger.debug("Calling the failure method because of a timeout reason."
-                                                + " Notification: " + connectorId + ":" + upcid);
-                        }
-
-                        //Getting the callback
-                        IRRPCOnResponseCallback aOnResponse = callsMap.get(connectorId).remove(upcid);
-
-                        //Cleaning if empty
-                        if (callsMap.get(connectorId).isEmpty()) {
-                                callsMap.remove(connectorId);
-                        }
-
-                        aOnResponse.failure(FailureReason.TIMEOUT, connectorId);
-                }
-        }
+    }
 }

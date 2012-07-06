@@ -24,13 +24,13 @@ import net.sf.ehcache.event.CacheManagerEventListenerFactory;
  */
 public class EhCacheEventListenerFactory extends CacheManagerEventListenerFactory {
 
-        /**
-         * 
-         * @param properties
-         * @return
-         */
-        @Override
-        public EhCacheEventListener createCacheManagerEventListener(Properties properties) {
-                return new EhCacheEventListener();
-        }
+    /**
+     * 
+     * @param properties
+     * @return
+     */
+    @Override
+    public EhCacheEventListener createCacheManagerEventListener(Properties properties) {
+        return new EhCacheEventListener();
+    }
 }

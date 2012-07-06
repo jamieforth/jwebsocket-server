@@ -25,26 +25,26 @@ import org.jwebsocket.api.IStorageProvider;
  */
 public class MemcachedStorageProvider implements IStorageProvider {
 
-        private MemcachedClient mMemcachedClient;
+    private MemcachedClient mMemcachedClient;
 
-        public MemcachedClient getMemcachedClient() {
-                return mMemcachedClient;
-        }
+    public MemcachedClient getMemcachedClient() {
+        return mMemcachedClient;
+    }
 
-        public void setMemcachedClient(MemcachedClient aMemcachedClient) {
-                this.mMemcachedClient = aMemcachedClient;
-        }
+    public void setMemcachedClient(MemcachedClient aMemcachedClient) {
+        this.mMemcachedClient = aMemcachedClient;
+    }
 
-        @Override
-        public IBasicStorage<String, Object> getStorage(String aName) throws Exception {
-                IBasicStorage<String, Object> lStorage = new MemcachedStorage<String, Object>(aName, mMemcachedClient);
-                lStorage.initialize();
+    @Override
+    public IBasicStorage<String, Object> getStorage(String aName) throws Exception {
+        IBasicStorage<String, Object> lStorage = new MemcachedStorage<String, Object>(aName, mMemcachedClient);
+        lStorage.initialize();
 
-                return lStorage;
-        }
+        return lStorage;
+    }
 
-        @Override
-        public void removeStorage(String aName) throws Exception {
-                new MemcachedStorage<String, Object>(aName, mMemcachedClient).clear();
-        }
+    @Override
+    public void removeStorage(String aName) throws Exception {
+        new MemcachedStorage<String, Object>(aName, mMemcachedClient).clear();
+    }
 }

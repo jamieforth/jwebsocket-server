@@ -30,110 +30,110 @@ import org.jwebsocket.api.IBasicStorage;
  * @author kyberneees
  */
 public abstract class BaseStorage<K, V> implements IBasicStorage<K, V> {
-        
-        /**
-         * {@inheritDoc
-         *
-         * @param aKeys
-         * @return
-         */
-        @Override
-        public Map<K, V> getAll(Collection<K> aKeys) {
-                FastMap<K, V> lMap = new FastMap<K, V>();
-                for (K lKey : aKeys) {
-                        lMap.put((K) lKey, get((K) lKey));
-                }
-
-                return lMap;
+    
+    /**
+     * {@inheritDoc
+     *
+     * @param aKeys
+     * @return
+     */
+    @Override
+    public Map<K, V> getAll(Collection<K> aKeys) {
+        FastMap<K, V> lMap = new FastMap<K, V>();
+        for (K lKey : aKeys) {
+            lMap.put((K) lKey, get((K) lKey));
         }
 
-        /**
-         * {@inheritDoc
-         *
-         * @throws Exception
-         */
-        @Override
-        public boolean containsKey(Object o) {
-                return keySet().contains(o);
-        }
+        return lMap;
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @throws Exception
-         */
-        @Override
-        public boolean containsValue(Object o) {
-                return values().contains(o);
-        }
+    /**
+     * {@inheritDoc
+     *
+     * @throws Exception
+     */
+    @Override
+    public boolean containsKey(Object o) {
+        return keySet().contains(o);
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @throws Exception
-         */
-        @Override
-        public void shutdown() throws Exception {
-        }
+    /**
+     * {@inheritDoc
+     *
+     * @throws Exception
+     */
+    @Override
+    public boolean containsValue(Object o) {
+        return values().contains(o);
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @return
-         */
-        @Override
-        public int size() {
-                return keySet().size();
-        }
+    /**
+     * {@inheritDoc
+     *
+     * @throws Exception
+     */
+    @Override
+    public void shutdown() throws Exception {
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @return
-         */
-        @Override
-        public boolean isEmpty() {
-                return keySet().isEmpty();
-        }
+    /**
+     * {@inheritDoc
+     *
+     * @return
+     */
+    @Override
+    public int size() {
+        return keySet().size();
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @param aMap
-         */
-        @Override
-        public void putAll(Map<? extends K, ? extends V> aMap) {
-                for (K lkey : aMap.keySet()) {
-                        put(lkey, aMap.get(lkey));
-                }
-        }
+    /**
+     * {@inheritDoc
+     *
+     * @return
+     */
+    @Override
+    public boolean isEmpty() {
+        return keySet().isEmpty();
+    }
 
-        /**
-         * {@inheritDoc
-         */
-        @Override
-        public void clear() {
-                for (K lKey : keySet()) {
-                        remove(lKey);
-                }
+    /**
+     * {@inheritDoc
+     *
+     * @param aMap
+     */
+    @Override
+    public void putAll(Map<? extends K, ? extends V> aMap) {
+        for (K lkey : aMap.keySet()) {
+            put(lkey, aMap.get(lkey));
         }
+    }
 
-        /**
-         * {@inheritDoc
-         *
-         * @return
-         */
-        @Override
-        public Set<Entry<K, V>> entrySet() {
-                return getAll(keySet()).entrySet();
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public void clear() {
+        for (K lKey : keySet()) {
+            remove(lKey);
         }
-        
-        /**
-         * 
-         * {@inheritDoc }
-         */
-        @Override
-        public Collection<V> values() {
-                return getAll(keySet()).values();
-        }
+    }
+
+    /**
+     * {@inheritDoc
+     *
+     * @return
+     */
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        return getAll(keySet()).entrySet();
+    }
+    
+    /**
+     * 
+     * {@inheritDoc }
+     */
+    @Override
+    public Collection<V> values() {
+        return getAll(keySet()).values();
+    }
 }

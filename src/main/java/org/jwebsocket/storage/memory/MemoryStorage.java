@@ -30,224 +30,224 @@ import org.jwebsocket.api.IBasicStorage;
  */
 public class MemoryStorage<K, V> implements IBasicStorage<K, V> {
 
-        private static FastMap<String, FastMap> mContainer = new FastMap<String, FastMap>();
-        private String mName;
-        private FastMap mMap;
+    private static FastMap<String, FastMap> mContainer = new FastMap<String, FastMap>();
+    private String mName;
+    private FastMap mMap;
 
-        /**
-         * Create a new MemoryStorage instance
-         * @param aName The name of the storage container
-         * */
-        public MemoryStorage(String aName) {
-                this.mName = aName;
+    /**
+     * Create a new MemoryStorage instance
+     * @param aName The name of the storage container
+     * */
+    public MemoryStorage(String aName) {
+        this.mName = aName;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public static FastMap<String, FastMap> getContainer() {
+        return mContainer;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    @Override
+    public String getName() {
+        return mName;
+    }
+
+    /**
+     * {@inheritDoc
+     * 
+     * @param aNewName 
+     * @throws Exception 
+     */
+    @Override
+    public synchronized void setName(String aNewName) throws Exception {
+        if (getContainer().containsKey(mName)) {
+            FastMap lValue = getContainer().remove(mName);
+            if (mMap != null) {
+                getContainer().put(aNewName, mMap);
+            } else {
+                getContainer().put(aNewName, lValue);
+            }
         }
 
-        /**
-         * 
-         * @return
-         */
-        public static FastMap<String, FastMap> getContainer() {
-                return mContainer;
+        this.mName = aNewName;
+    }
+
+    /**
+     * {@inheritDoc
+     * 
+     * @param aKeys
+     * @return  
+     */
+    @Override
+    public Map<K, V> getAll(Collection<K> aKeys) {
+        FastMap<K, V> lMap = new FastMap<K, V>();
+        for (K lKey : aKeys) {
+            lMap.put((K) lKey, get((K) lKey));
         }
 
-        /**
-         * 
-         * @return
-         */
-        @Override
-        public String getName() {
-                return mName;
+        return lMap;
+    }
+
+    /**
+     * {@inheritDoc
+     * 
+     * @throws Exception 
+     */
+    @Override
+    public void initialize() throws Exception {
+        if (!getContainer().containsKey(mName) || null == getContainer().get(mName)) {
+            getContainer().put(mName, new FastMap<K, V>());
         }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param aNewName 
-         * @throws Exception 
-         */
-        @Override
-        public synchronized void setName(String aNewName) throws Exception {
-                if (getContainer().containsKey(mName)) {
-                        FastMap lValue = getContainer().remove(mName);
-                        if (mMap != null) {
-                                getContainer().put(aNewName, mMap);
-                        } else {
-                                getContainer().put(aNewName, lValue);
-                        }
-                }
+        mMap = getContainer().get(mName);
+    }
 
-                this.mName = aNewName;
+    /**
+     * {@inheritDoc
+     * 
+     * @throws Exception 
+     */
+    @Override
+    public void shutdown() throws Exception {
+    }
+
+    /**
+     * {@inheritDoc
+     * 
+     * @return 
+     */
+    @Override
+    public int size() {
+        return mMap.size();
+    }
+
+    /**
+     * {@inheritDoc
+     * 
+     * @return 
+     */
+    @Override
+    public boolean isEmpty() {
+        if (mMap.isEmpty()) {
+            return true;
         }
+        return false;
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param aKeys
-         * @return  
-         */
-        @Override
-        public Map<K, V> getAll(Collection<K> aKeys) {
-                FastMap<K, V> lMap = new FastMap<K, V>();
-                for (K lKey : aKeys) {
-                        lMap.put((K) lKey, get((K) lKey));
-                }
-
-                return lMap;
+    /**
+     * {@inheritDoc
+     * 
+     * @param key 
+     * @return 
+     */
+    @Override
+    public boolean containsKey(Object aKey) {
+        if (mMap.containsKey((String) aKey)) {
+            return true;
         }
+        return false;
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @throws Exception 
-         */
-        @Override
-        public void initialize() throws Exception {
-                if (!getContainer().containsKey(mName) || null == getContainer().get(mName)) {
-                        getContainer().put(mName, new FastMap<K, V>());
-                }
-
-                mMap = getContainer().get(mName);
+    /**
+     * {@inheritDoc
+     * 
+     * @param aValue 
+     * @return 
+     */
+    @Override
+    public boolean containsValue(Object aValue) {
+        if (mMap.containsValue(aValue)) {
+            return true;
         }
+        return false;
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @throws Exception 
-         */
-        @Override
-        public void shutdown() throws Exception {
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @param lKey 
+     * @return 
+     */
+    @Override
+    public V get(Object lKey) {
+        return (V) mMap.get(lKey);
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @return 
-         */
-        @Override
-        public int size() {
-                return mMap.size();
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @param lKey 
+     * @param lValue 
+     * @return 
+     */
+    @Override
+    public V put(K lKey, V lValue) {
+        return (V) mMap.put(lKey, lValue);
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @return 
-         */
-        @Override
-        public boolean isEmpty() {
-                if (mMap.isEmpty()) {
-                        return true;
-                }
-                return false;
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @param aKey 
+     * @return 
+     */
+    @Override
+    public V remove(Object aKey) {
+        return (V) mMap.remove(aKey);
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param key 
-         * @return 
-         */
-        @Override
-        public boolean containsKey(Object aKey) {
-                if (mMap.containsKey((String) aKey)) {
-                        return true;
-                }
-                return false;
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @param aMap 
+     */
+    @Override
+    public void putAll(Map<? extends K, ? extends V> aMap) {
+        mMap.putAll(aMap);
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param aValue 
-         * @return 
-         */
-        @Override
-        public boolean containsValue(Object aValue) {
-                if (mMap.containsValue(aValue)) {
-                        return true;
-                }
-                return false;
-        }
+    /**
+     * {@inheritDoc
+     */
+    @Override
+    public void clear() {
+        mMap.clear();
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param lKey 
-         * @return 
-         */
-        @Override
-        public V get(Object lKey) {
-                return (V) mMap.get(lKey);
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @return 
+     */
+    @Override
+    public Set<K> keySet() {
+        return mMap.keySet();
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param lKey 
-         * @param lValue 
-         * @return 
-         */
-        @Override
-        public V put(K lKey, V lValue) {
-                return (V) mMap.put(lKey, lValue);
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @return 
+     */
+    @Override
+    public Collection<V> values() {
+        return mMap.values();
+    }
 
-        /**
-         * {@inheritDoc
-         * 
-         * @param aKey 
-         * @return 
-         */
-        @Override
-        public V remove(Object aKey) {
-                return (V) mMap.remove(aKey);
-        }
-
-        /**
-         * {@inheritDoc
-         * 
-         * @param aMap 
-         */
-        @Override
-        public void putAll(Map<? extends K, ? extends V> aMap) {
-                mMap.putAll(aMap);
-        }
-
-        /**
-         * {@inheritDoc
-         */
-        @Override
-        public void clear() {
-                mMap.clear();
-        }
-
-        /**
-         * {@inheritDoc
-         * 
-         * @return 
-         */
-        @Override
-        public Set<K> keySet() {
-                return mMap.keySet();
-        }
-
-        /**
-         * {@inheritDoc
-         * 
-         * @return 
-         */
-        @Override
-        public Collection<V> values() {
-                return mMap.values();
-        }
-
-        /**
-         * {@inheritDoc
-         * 
-         * @return 
-         */
-        @Override
-        public Set<Entry<K, V>> entrySet() {
-                return mMap.entrySet();
-        }
+    /**
+     * {@inheritDoc
+     * 
+     * @return 
+     */
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        return mMap.entrySet();
+    }
 }

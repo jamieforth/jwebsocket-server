@@ -27,20 +27,20 @@ import org.jwebsocket.storage.ehcache.EhCacheStorage;
  */
 public class EhCacheCacheStorage<K, V> extends EhCacheStorage<K, V> implements IBasicCacheStorage<K, V> {
 
-        /**
-         *
-         * @param aName
-         */
-        public EhCacheCacheStorage(String aName) {
-                super(aName);
-        }
+    /**
+     *
+     * @param aName
+     */
+    public EhCacheCacheStorage(String aName) {
+        super(aName);
+    }
 
-        @Override
-        public V put(K aKey, V aData, int expTime) {
-                Element lElement = new Element(aKey, aData);
-                lElement.setTimeToLive(expTime);
-                getCache().put(lElement);
+    @Override
+    public V put(K aKey, V aData, int expTime) {
+        Element lElement = new Element(aKey, aData);
+        lElement.setTimeToLive(expTime);
+        getCache().put(lElement);
 
-                return (V)aData;
-        }
+        return (V)aData;
+    }
 }

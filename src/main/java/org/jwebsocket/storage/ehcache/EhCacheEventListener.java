@@ -25,43 +25,43 @@ import net.sf.ehcache.event.CacheManagerEventListener;
  */
 public class EhCacheEventListener implements CacheManagerEventListener {
 
-        /**
-         * 
-         * @throws CacheException
-         */
-        @Override
-        public void init() throws CacheException {
-        }
+    /**
+     * 
+     * @throws CacheException
+     */
+    @Override
+    public void init() throws CacheException {
+    }
 
-        /**
-         * 
-         * @param aCacheName
-         */
-        @Override
-        public void notifyCacheAdded(String aCacheName) {
-        }
+    /**
+     * 
+     * @param aCacheName
+     */
+    @Override
+    public void notifyCacheAdded(String aCacheName) {
+    }
 
-        /**
-         * 
-         * @param aCacheName
-         */
-        @Override
-        public void notifyCacheRemoved(String aCacheName) {
-        }
+    /**
+     * 
+     * @param aCacheName
+     */
+    @Override
+    public void notifyCacheRemoved(String aCacheName) {
+    }
 
-        /**
-         * 
-         * @return
-         */
-        @Override
-        public Status getStatus() {
-                return null;
-        }
+    /**
+     * 
+     * @return
+     */
+    @Override
+    public Status getStatus() {
+        return null;
+    }
 
-        /**
-         * 
-         */
-        @Override
-        public void dispose() {
-        }
+    /**
+     * 
+     */
+    @Override
+    public void dispose() {
+    }
 }

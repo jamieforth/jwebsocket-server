@@ -26,18 +26,18 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PurgeCancelledTimeoutsTask extends TimerTask {
 
-        private Timer t;
-        private static Log logger = LogFactory.getLog(PurgeCancelledTimeoutsTask.class);
+    private Timer t;
+    private static Log logger = LogFactory.getLog(PurgeCancelledTimeoutsTask.class);
 
-        public PurgeCancelledTimeoutsTask(Timer t) {
-                this.t = t;
-        }
+    public PurgeCancelledTimeoutsTask(Timer t) {
+        this.t = t;
+    }
 
-        @Override
-        public void run() {
-                if (logger.isDebugEnabled()) {
-                        logger.debug("Purging the timeout callbacks queue...");
-                }
-                t.purge();
+    @Override
+    public void run() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Purging the timeout callbacks queue...");
         }
+        t.purge();
+    }
 }
