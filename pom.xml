@@ -40,59 +40,6 @@
   <!-- define all the dependencies here -->
   <dependencies>
 
-    <!-- Apache Commons Libraries -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-beanutils</groupId> -->
-    <!--   <artifactId>commons-beanutils</artifactId> -->
-    <!--   <version>1.8.3</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-beanutils</groupId> -->
-    <!--   <artifactId>commons-beanutils-core</artifactId> -->
-    <!--   <version>1.8.3</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-collections</groupId> -->
-    <!--   <artifactId>commons-collections</artifactId> -->
-    <!--   <version>3.2.1</version> -->
-    <!-- </dependency>                 -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-dbcp</groupId> -->
-    <!--   <artifactId>commons-dbcp</artifactId> -->
-    <!--   <version>1.4</version> -->
-    <!-- </dependency> -->           
-    <!-- <dependency> -->
-    <!--   <groupId>org.apache.commons</groupId> -->
-    <!--   <artifactId>commons-compress</artifactId> -->
-    <!--   <version>1.2</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-digester</groupId> -->
-    <!--   <artifactId>commons-digester</artifactId> -->
-    <!--   <version>2.1</version> -->
-    <!-- </dependency> -->
-    <!-- Required for the jWebSocket Mail Plugin -->
-    <!-- <dependency> -->
-    <!--   <groupId>org.apache.commons</groupId> -->
-    <!--   <artifactId>commons-email</artifactId> -->
-    <!--   <version>1.2</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-lang</groupId> -->
-    <!--   <artifactId>commons-lang</artifactId> -->
-    <!--   <version>2.1</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-logging</groupId> -->
-    <!--   <artifactId>commons-logging</artifactId> -->
-    <!--   <version>1.1.1</version> -->
-    <!-- </dependency> -->
-    <!-- <dependency> -->
-    <!--   <groupId>commons-pool</groupId> -->
-    <!--   <artifactId>commons-pool</artifactId> -->
-    <!--   <version>1.5.6</version> -->
-    <!-- </dependency> -->
-
     <!-- Java Class Loader -->
     <dependency>
       <groupId>org.xeustechnologies</groupId>
