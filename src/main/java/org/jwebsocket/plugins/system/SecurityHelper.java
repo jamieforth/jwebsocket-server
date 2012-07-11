@@ -51,7 +51,7 @@ public class SecurityHelper {
         try {
             Map<String, Object> session = getSessionManager().getSession(aSessionId);
             if (session.containsKey(SystemPlugIn.AUTHORITIES)) {
-                String[] authorities = ((String) session.get(aSessionId)).split(" ");
+                String[] authorities = ((String) session.get(SystemPlugIn.AUTHORITIES)).split(" ");
                 int end = authorities.length;
 
                 for (int i = 0; i < end; i++) {
