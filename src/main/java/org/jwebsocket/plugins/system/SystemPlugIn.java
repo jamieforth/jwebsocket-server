@@ -233,7 +233,7 @@ public class SystemPlugIn extends TokenPlugIn {
     @Override
     public void connectorStarted(WebSocketConnector aConnector) {
         // Setting the session only if a session manager is defined,
-        // ommitting if the session storage was previously setted (embedded mode)
+        // Omitting if the session storage was previously set (embedded mode).
         if (null != mSessionManager && null == aConnector.getSession().getStorage()) {
             try {
                 if (mLog.isDebugEnabled()) {
@@ -266,8 +266,8 @@ public class SystemPlugIn extends TokenPlugIn {
 
     @Override
     public void connectorStopped(WebSocketConnector aConnector, CloseReason aCloseReason) {
-        // Allowing all connectors for a reconnection
-        // Ommitting if running in embedded mode like a servlet container
+        // Allowing all connectors for a reconnection.
+        // Omitting if running in embedded mode like a servlet container.
         WebSocketSession lSession = aConnector.getSession();
         if (lSession.getStorage() != null && !(lSession.getStorage() instanceof HttpSessionStorage)
                 && mSessionManager != null) {
@@ -279,7 +279,7 @@ public class SystemPlugIn extends TokenPlugIn {
             }
             synchronized (this) {
                 //Removing the local cached  storage instance. 
-                //Free space if the client never gets reconnected
+                //Free space if the client never gets reconnected.
                 if (mSessionManager instanceof SessionManager) {
                     ((SessionManager) mSessionManager).getSessionsReferences().remove(lSessionId);
                 }
@@ -291,14 +291,17 @@ public class SystemPlugIn extends TokenPlugIn {
         broadcastDisconnectEvent(aConnector);
     }
 
+    @Deprecated
     private String getGroup(WebSocketConnector aConnector) {
         return aConnector.getString(VAR_GROUP);
     }
 
+    @Deprecated
     private void setGroup(WebSocketConnector aConnector, String aGroup) {
         aConnector.setString(VAR_GROUP, aGroup);
     }
 
+    @Deprecated
     private void removeGroup(WebSocketConnector aConnector) {
         aConnector.removeVar(VAR_GROUP);
     }
@@ -386,7 +389,7 @@ public class SystemPlugIn extends TokenPlugIn {
         // TODO: The client does not get anything here!
         lWelcome.setString("subProtocol", aConnector.getSubprot());
 
-        // if anoymous user allowed send corresponding flag for 
+        // If anonymous user is allowed, send corresponding flag for
         // clarification that auto anonymous may have been applied.
         if (ALLOW_ANONYMOUS_LOGIN && ALLOW_AUTO_ANONYMOUS) {
             lWelcome.setBoolean(
@@ -454,7 +457,7 @@ public class SystemPlugIn extends TokenPlugIn {
      */
     private void sendGoodBye(WebSocketConnector aConnector, CloseReason aCloseReason) {
         if (mLog.isDebugEnabled()) {
-            mLog.debug("Sending good bye...");
+            mLog.debug("Sending goodbye...");
         }
         // send "goodBye" token to client
         Token lGoodBye = TokenFactory.createToken(TT_GOODBYE);
@@ -466,10 +469,11 @@ public class SystemPlugIn extends TokenPlugIn {
             lGoodBye.setString("reason", aCloseReason.toString().toLowerCase());
         }
 
-        // don't send session-id on good bye, neither required nor desired
+        // don't send session-id on goodbye, neither required nor desired
         sendToken(aConnector, aConnector, lGoodBye);
     }
 
+    @Deprecated
     private void login(WebSocketConnector aConnector, Token aToken) {
         Token lResponse = createResponse(aToken);
 
@@ -555,8 +559,8 @@ public class SystemPlugIn extends TokenPlugIn {
 
         String lUsername = getUsername(aConnector);
         if (null != lUsername) {
-            // send normal answer token, good bye is for close!
-            // if anoymous user allowed send corresponding flag for 
+            // Send normal answer token, goodbye is for close.
+            // If anonymous user is allowed, send corresponding flag for
             // clarification that auto anonymous may have been applied.
             if (ALLOW_ANONYMOUS_LOGIN && ALLOW_AUTO_ANONYMOUS) {
                 lResponse.setBoolean(
@@ -565,7 +569,7 @@ public class SystemPlugIn extends TokenPlugIn {
                         && ANONYMOUS_USER.equals(lUsername));
             }
             sendToken(aConnector, aConnector, lResponse);
-            // send good bye token as response to client
+            // send goodbye token as response to client
             // sendGoodBye(aConnector, CloseReason.CLIENT);
 
             // and broadcast the logout event
@@ -722,7 +726,7 @@ public class SystemPlugIn extends TokenPlugIn {
         Boolean lNoDisconnectBroadcast =
                 aToken.getBoolean("noDisconnectBroadcast", false);
 
-        // only send a good bye message if timeout is > 0 and not to be noed
+        // Only send a goodbye message if timeout is > 0 and noGoodBy is false.
         if (lTimeout > 0 && !lNoGoodBye) {
             sendGoodBye(aConnector, CloseReason.CLIENT);
         }
@@ -738,9 +742,8 @@ public class SystemPlugIn extends TokenPlugIn {
             mLog.debug("Closing client " + (lTimeout > 0 ? "with timeout " + lTimeout + "ms" : "immediately") + "...");
         }
 
-        // don't send a response here! We're about to close the connection!
-        // broadcasts disconnect event to other clients
-        // if not explicitely noed
+        // Don't send a response here, we're about to close the connection!
+        // Broadcasts disconnect event to other clients if not explicitly false.
         aConnector.setBoolean("noDisconnectBroadcast", lNoDisconnectBroadcast);
         aConnector.stopConnector(CloseReason.CLIENT);
     }
@@ -993,7 +996,8 @@ public class SystemPlugIn extends TokenPlugIn {
         for (GrantedAuthority lGA : lAuthResult.getAuthorities()) {
             lAuthorities = lAuthorities.concat(lGA.getAuthority() + " ");
         }
-        // Storing the user authorities as a string to avoid serialization problems
+        // Storing the user authorities as a string to avoid serialisation problems.
+        // FIXME: Why do this is we're using Spring?
         lSessionParms.put(AUTHORITIES, lAuthorities);
 
         // Creating the response
