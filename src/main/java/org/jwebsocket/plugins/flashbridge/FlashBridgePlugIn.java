@@ -69,6 +69,10 @@ public class FlashBridgePlugIn extends TokenPlugIn {
 
             mBridgeProcess = new BridgeProcess(this);
             mBridgeThread = new Thread(mBridgeProcess);
+            // FindBug:
+            // The constructor starts a thread. This is likely to be wrong if
+            // the class is ever extended/subclassed, since the thread will be
+            // started before the subclass constructor is started.     
             mBridgeThread.start();
             if (mLog.isInfoEnabled()) {
                 mLog.info("FlashBridge plug-in successfully instantiated.");
@@ -99,7 +103,7 @@ public class FlashBridgePlugIn extends TokenPlugIn {
                 if (mLog.isInfoEnabled()) {
                     mLog.info("crossdomain config successfully loaded from " + lPathToCrossDomainXML + ".");
                 }
-            } catch (Exception lEx) {
+            } catch (IOException lEx) {
                 mLog.error(lEx.getClass().getSimpleName()
                         + " reading crossdomain.xml: " + lEx.getMessage());
             }
@@ -117,6 +121,7 @@ public class FlashBridgePlugIn extends TokenPlugIn {
          * @param aPlugIn
          */
         public BridgeProcess(FlashBridgePlugIn aPlugIn) {
+            // FindBug: This field is never read.  Consider removing it from the class.
             mPlugIn = aPlugIn;
         }
 
@@ -177,7 +182,7 @@ public class FlashBridgePlugIn extends TokenPlugIn {
                     if (mLog.isDebugEnabled()) {
                         mLog.debug("Client disconnected...");
                     }
-                } catch (Exception lEx) {
+                } catch (IOException lEx) {
                     if (mIsRunning) {
                         mIsRunning = false;
                         mLog.error(lEx.getClass().getSimpleName() + ": " + lEx.getMessage());
@@ -227,13 +232,13 @@ public class FlashBridgePlugIn extends TokenPlugIn {
                 if (mLog.isDebugEnabled()) {
                     mLog.debug("Closed FlashBridge server socket.");
                 }
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 mLog.error("(accept) " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
             }
 
             try {
                 mBridgeThread.join(10000);
-            } catch (Exception ex) {
+            } catch (InterruptedException ex) {
                 mLog.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
             }
             if (mLog.isDebugEnabled()) {

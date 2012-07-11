@@ -28,7 +28,6 @@ public class WebSocketHttpSessionMerger {
     private static FastMap<String, HttpSession> mHttpSessions = new FastMap<String, HttpSession>();
     private static FastMap<String, ServletConnector> mServletConnectors = new FastMap<String, ServletConnector>();
     private static FastMap<String, WebSocketSession> mWsSessions = new FastMap<String, WebSocketSession>();
-    private static FastMap<String, String> mAssignments = new FastMap<String, String>();
 
     public static void addHttpSession(HttpSession aHttpSession) {
         mHttpSessions.put(aHttpSession.getId(), aHttpSession);
@@ -55,23 +54,25 @@ public class WebSocketHttpSessionMerger {
     }
 
     public static String getHttpSessionsCSV() {
-        String lRes = "";
+        StringBuilder lResSB = new StringBuilder("");
+        String lRes="";
         for (HttpSession lSession : mHttpSessions.values()) {
-            lRes += lSession.getId() + ",";
+            lResSB.append(lSession.getId()).append(",");
         }
-        if (lRes.length() > 0) {
-            lRes = lRes.substring(0, lRes.length() - 1);
+        if (lResSB.length() > 0) {
+            lRes = lResSB.substring(0, lResSB.length() - 1);
         }
         return lRes;
     }
 
     public static String getWebSocketSessionsCSV() {
+        StringBuilder lResSB = new StringBuilder("");
         String lRes = "";
         for (WebSocketSession lSession : mWsSessions.values()) {
-            lRes += lSession.getSessionId() + ",";
+            lResSB.append(lSession.getSessionId()).append(",");
         }
-        if (lRes.length() > 0) {
-            lRes = lRes.substring(0, lRes.length() - 1);
+        if (lResSB.length() > 0) {
+            lRes = lResSB.substring(0, lResSB.length() - 1);
         }
         return lRes;
     }

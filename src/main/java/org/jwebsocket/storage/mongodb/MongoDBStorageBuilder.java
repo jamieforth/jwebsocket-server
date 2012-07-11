@@ -91,6 +91,7 @@ public class MongoDBStorageBuilder {
         this.mDatabaseName = aDatabaseName;
 
         //Getting the temporal database instance to improve performance
+        // FindBug: mCon not initialized in constructor. May be null.
         mDatabase = mCon.getDB(aDatabaseName);
     }
 
@@ -109,6 +110,7 @@ public class MongoDBStorageBuilder {
         this.mCollectionName = aCollectionName;
 
         //Getting the temporal collection instance to improve performance
+        // FindBug: mCon not initialized in constructor. May be null.
         mCollection = mCon.getDB(mDatabaseName).getCollection(aCollectionName);
     }
 }

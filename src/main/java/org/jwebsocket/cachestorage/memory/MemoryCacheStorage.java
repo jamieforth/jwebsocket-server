@@ -84,7 +84,7 @@ public class MemoryCacheStorage<K, V> implements IBasicCacheStorage<K, V> {
     }
 
     @Override
-    public String getName() {
+    public synchronized String getName() {
         return mName;
     }
 

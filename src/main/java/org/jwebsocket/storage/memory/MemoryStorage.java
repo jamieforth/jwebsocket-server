@@ -55,7 +55,7 @@ public class MemoryStorage<K, V> implements IBasicStorage<K, V> {
      * @return
      */
     @Override
-    public String getName() {
+    public synchronized String getName() {
         return mName;
     }
 

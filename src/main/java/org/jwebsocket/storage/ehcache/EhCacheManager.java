@@ -25,7 +25,7 @@ import org.jwebsocket.config.JWebSocketConfig;
  */
 public class EhCacheManager {
 
-    private static CacheManager mInstance = null;
+    private volatile static CacheManager mInstance = null;
 
     /**
      * Default constructor, cannot be called from outside this class.

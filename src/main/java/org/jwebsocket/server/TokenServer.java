@@ -558,7 +558,7 @@ public class TokenServer extends BaseServer {
                         }
                         lConnector.sendPacket(lPacket);
                     }
-                } catch (Exception ex) {
+                } catch (RuntimeException ex) {
                     System.out.println(ex);
                 }
             }

@@ -118,7 +118,7 @@ public class HttpSessionStorage extends BaseStorage<String, Object> {
      */
     @Override
     public Object put(String aKey, Object aData) {
-        mSession.setAttribute(aKey.toString(), aData);
+        mSession.setAttribute(aKey, aData);
 
         return aData;
     }

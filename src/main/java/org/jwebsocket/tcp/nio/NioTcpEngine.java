@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngineResult;
 import org.apache.log4j.Logger;
 import org.jwebsocket.api.EngineConfiguration;
 import org.jwebsocket.api.WebSocketConnector;
@@ -66,7 +65,6 @@ public class NioTcpEngine extends BaseEngine {
     private Selector mPlainSelector;
     private Selector mSSLSelector;
     private ServerSocketChannel mPlainServer;
-    private ServerSocketChannel mSSLServer;
     private boolean mIsRunning;
     private Map<String, Queue<DataFuture>> mPendingWrites; // <connector id, data queue>
     private ExecutorService mExecutorService;
@@ -74,7 +72,6 @@ public class NioTcpEngine extends BaseEngine {
     private Map<SocketChannel, String> mChannelToConnectorMap; // <socket channel, connector id>
     private ByteBuffer mReadBuffer;
     private Thread mPlainSelectorThread;
-    private Thread mSSLSelectorThread;
     private final DelayedPacketsQueue mDelayedPacketsQueue = new DelayedPacketsQueue();
     private SSLContext mSSLContext;
 
@@ -141,7 +138,9 @@ public class NioTcpEngine extends BaseEngine {
             if (mLog.isDebugEnabled()) {
                 mLog.debug("NioTcpEngine started successfully with '" + lNumWorkers + "' workers!");
             }
-        } catch (Exception e) {
+        } catch (ClosedChannelException e) {
+            throw new WebSocketException(e.getMessage(), e);
+        } catch (IOException e) {
             throw new WebSocketException(e.getMessage(), e);
         }
     }
@@ -200,7 +199,7 @@ public class NioTcpEngine extends BaseEngine {
             try {
                 lChannel.close();
                 lChannel.socket().close();
-            } catch (Exception lEx) {
+            } catch (IOException lEx) {
                 //Ignore it. Channel has been closed previously!
             }
             mChannelToConnectorMap.remove(lChannel);
@@ -395,7 +394,7 @@ public class NioTcpEngine extends BaseEngine {
                 aKey.cancel();
                 lChannel.socket().close();
                 lChannel.close();
-            } catch (Exception lEx) {
+            } catch (IOException lEx) {
             }
 
             String lId = mChannelToConnectorMap.remove(lChannel);

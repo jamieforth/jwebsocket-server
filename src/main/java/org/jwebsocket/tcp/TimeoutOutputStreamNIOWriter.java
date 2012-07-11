@@ -141,6 +141,7 @@ public class TimeoutOutputStreamNIOWriter {
         }
 
         public int getTimeout() {
+            // FindBug: This field is never written. 
             return mTimeout;
         }
 
@@ -162,6 +163,8 @@ public class TimeoutOutputStreamNIOWriter {
             if (mIsDebug && mLog.isDebugEnabled()) {
                 mLog.debug("Cancelling timeout control for '" + mConnector.getId() + "' because packet had been sent properly...");
             }
+            // FindBug: mTimeoutTask field is never initialized within any constructor
+            // and is therefore could be null after the object is constructed.
             mTimeoutTask.cancel();
             return null;
         }

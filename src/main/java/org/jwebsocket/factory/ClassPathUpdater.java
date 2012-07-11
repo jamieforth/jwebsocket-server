@@ -20,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * Allows programs to modify the classpath during runtime.
@@ -102,8 +104,17 @@ public class ClassPathUpdater {
     public static void add(URL aURL)
             throws IOException, NoSuchMethodException, IllegalAccessException,
             InvocationTargetException {
-        Method lMethod = CLASS_LOADER.getDeclaredMethod("addURL", PARAMETERS);
-        lMethod.setAccessible(true);
+        final Method lMethod = CLASS_LOADER.getDeclaredMethod("addURL", PARAMETERS);
+        
+        AccessController.doPrivileged(new PrivilegedAction() {
+            @Override
+            public Object run() {
+                lMethod.setAccessible(true);
+                return null; // nothing to return
+            }
+        });
+        
+        
         lMethod.invoke(getClassLoader(), new Object[]{aURL});
     }
     
@@ -119,8 +130,14 @@ public class ClassPathUpdater {
     public static void add(URL aURL, ClassLoader aClassLoader)
             throws IOException, NoSuchMethodException, IllegalAccessException,
             InvocationTargetException {
-        Method lMethod = aClassLoader.getClass().getDeclaredMethod("addURL", PARAMETERS);
-        lMethod.setAccessible(true);
+        final Method lMethod = aClassLoader.getClass().getDeclaredMethod("addURL", PARAMETERS);
+        AccessController.doPrivileged(new PrivilegedAction() {
+            @Override
+            public Object run() {
+                lMethod.setAccessible(true);
+                return null; // nothing to return
+            }
+        });
         lMethod.invoke(aClassLoader, new Object[]{aURL});
     }
     

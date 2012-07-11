@@ -17,13 +17,10 @@ package org.jwebsocket.security;
 
 import java.util.List;
 import java.util.Set;
-
 import org.jwebsocket.config.JWebSocketConfig;
 import org.jwebsocket.config.xml.RightConfig;
 import org.jwebsocket.config.xml.RoleConfig;
 import org.jwebsocket.config.xml.UserConfig;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
 
 /**
  * implements the security capabilities of jWebSocket.
@@ -38,16 +35,13 @@ public class SecurityFactory {
     /**
      *
      */
-    public static String USER_ANONYMOUS = "anonymous";
-    public static String USER_GUEST = "guest";
-    public static String USER_USER = "user";
-    public static String USER_ROOT = "root";
-    public static String USER_LOCKED = "locked";
+    public final static String USER_ANONYMOUS = "anonymous";
+    public final static String USER_GUEST = "guest";
+    public final static String USER_USER = "user";
+    public final static String USER_ROOT = "root";
+    public final static String USER_LOCKED = "locked";
     private static boolean mAutoAnonymous = false;
-    private static boolean mUseSpring = true;
-    private static AuthenticationProvider mAuthProv;
-    private static ProviderManager mAuthProvMgr;
-
+    
     /**
      * Initializes the security system programmatically to allow to
      * a startup without a config file in embedded environments!
@@ -303,6 +297,7 @@ public class SecurityFactory {
         Rights lRights = new Rights();
         if (aNamespace != null) {
             for (Right lRight : mRights.getRights()) {
+                // FindBug: aNamespace is never null. Consider removing this check
                 if (aNamespace == null || lRight.getId().startsWith(aNamespace)) {
                     lRights.addRight(lRight);
                 }

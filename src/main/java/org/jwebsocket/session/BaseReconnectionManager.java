@@ -88,7 +88,7 @@ public abstract class BaseReconnectionManager implements ISessionReconnectionMan
         getReconnectionIndex().put(aSessionId, true, getSessionExpirationTime());
 
         //Used by a deamon to release expired sessions resources
-        getSessionIdsTrash().put(aSessionId, System.currentTimeMillis() + (getSessionExpirationTime() * 1000));
+        getSessionIdsTrash().put(aSessionId, System.currentTimeMillis() + (getSessionExpirationTime() * 1000L));
     }
 
     @Override
