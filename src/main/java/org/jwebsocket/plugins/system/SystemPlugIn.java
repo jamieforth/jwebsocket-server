@@ -595,7 +595,7 @@ public class SystemPlugIn extends TokenPlugIn {
 
     private void send(WebSocketConnector aConnector, Token aToken) {
         // check if user is allowed to run 'send' command
-        if (!SecurityFactory.hasRight(getUsername(aConnector), NS_SYSTEM + ".send")) {
+        if (!SecurityHelper.userHasAuthority(aConnector.getSession().getSessionId(), NS_SYSTEM + ".send")) {            
             sendToken(aConnector, aConnector, createAccessDenied(aToken));
             return;
         }
@@ -678,7 +678,8 @@ public class SystemPlugIn extends TokenPlugIn {
     private void broadcast(WebSocketConnector aConnector, Token aToken) {
 
         // check if user is allowed to run 'broadcast' command
-        if (!SecurityFactory.hasRight(getUsername(aConnector), NS_SYSTEM + ".broadcast")) {
+        if (!SecurityHelper.userHasAuthority(aConnector.getSession().getSessionId(), NS_SYSTEM
+                + ".send")) {
             sendToken(aConnector, aConnector, createAccessDenied(aToken));
             return;
         }
