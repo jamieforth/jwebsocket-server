@@ -569,7 +569,7 @@ public class SystemPlugIn extends TokenPlugIn {
                         && ANONYMOUS_USER.equals(lUsername));
             }
             sendToken(aConnector, aConnector, lResponse);
-            // send goodbye token as response to client
+            // FIXME: send goodbye token as response to client?
             // sendGoodBye(aConnector, CloseReason.CLIENT);
 
             // and broadcast the logout event
@@ -1035,6 +1035,12 @@ public class SystemPlugIn extends TokenPlugIn {
         if (mLog.isDebugEnabled()) {
             mLog.debug("Logoff process finished successfully!");
         }
+        
+        // FIXME: send goodbye token as response to client?
+        // sendGoodBye(aConnector, CloseReason.CLIENT);
+
+        // broadcast the logout event
+        broadcastLogoutEvent(aConnector);
     }
 
     void getAuthorities(WebSocketConnector aConnector, Token aToken) {
