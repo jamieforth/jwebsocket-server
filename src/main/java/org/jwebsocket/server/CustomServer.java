@@ -18,14 +18,14 @@ package org.jwebsocket.server;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.jwebsocket.api.ServerConfiguration;
-import org.jwebsocket.api.WebSocketPacket;
-import org.jwebsocket.kit.RequestHeader;
-import org.jwebsocket.api.WebSocketPlugIn;
 import org.jwebsocket.api.WebSocketConnector;
 import org.jwebsocket.api.WebSocketEngine;
+import org.jwebsocket.api.WebSocketPacket;
+import org.jwebsocket.api.WebSocketPlugIn;
 import org.jwebsocket.api.WebSocketServerListener;
 import org.jwebsocket.config.JWebSocketCommonConstants;
 import org.jwebsocket.kit.CloseReason;
+import org.jwebsocket.kit.RequestHeader;
 import org.jwebsocket.kit.WebSocketServerEvent;
 import org.jwebsocket.logging.Logging;
 import org.jwebsocket.plugins.BasePlugInChain;
@@ -78,7 +78,7 @@ public class CustomServer extends BaseServer {
             WebSocketServerEvent lEvent = new WebSocketServerEvent(aConnector, this);
             for (WebSocketServerListener lListener : lListeners) {
                 if (lListener != null && lListener instanceof WebSocketServerListener) {
-                    ((WebSocketServerListener) lListener).processPacket(lEvent, aDataPacket);
+                    lListener.processPacket(lEvent, aDataPacket);
                 }
             }
         }

@@ -127,6 +127,7 @@ public class TCPEngine extends BaseEngine {
                             + (mSessionTimeout > 0 ? mSessionTimeout + "ms" : "infinite")
                             + "...");
                 }
+                FileInputStream fis = null;
                 try {
                     SSLContext lSSLContext = SSLContext.getInstance("TLS");
                     KeyManagerFactory lKMF = KeyManagerFactory.getInstance("SunX509");
@@ -136,7 +137,8 @@ public class TCPEngine extends BaseEngine {
                     if (lKeyStorePath != null) {
                         char[] lPassword = mKeyStorePassword.toCharArray();
                         URL lURL = JWebSocketConfig.getURLFromPath(lKeyStorePath);
-                        lKeyStore.load(new FileInputStream(lURL.getPath()), lPassword);
+                        fis = new FileInputStream(lURL.getPath());
+                        lKeyStore.load(fis, lPassword);
                         lKMF.init(lKeyStore, lPassword);
 
                         lSSLContext.init(lKMF.getKeyManagers(), null, new java.security.SecureRandom());
@@ -165,6 +167,14 @@ public class TCPEngine extends BaseEngine {
                     }
                 } catch (Exception lEx) {
                     mLog.error(Logging.getSimpleExceptionMessage(lEx, "instantiating SSL engine"));
+                }
+                finally{
+                    if (fis != null){
+                        try{
+                       fis.close(); 
+                        }
+                        catch (IOException e){}
+                    }
                 }
             } else {
                 mLog.error("SSL engine could not be instantiated due to missing configuration,"
@@ -204,7 +214,7 @@ public class TCPEngine extends BaseEngine {
                 mLog.warn("Stopping TCP engine '" + getId()
                         + "': no server socket or server socket closed.");
             }
-        } catch (Exception lEx) {
+        } catch (IOException lEx) {
             mLog.error(lEx.getClass().getSimpleName()
                     + " on stopping TCP engine '" + getId()
                     + "': " + lEx.getMessage());
@@ -452,7 +462,7 @@ public class TCPEngine extends BaseEngine {
                             //Starting new connection
                             lConnector.startConnector();
                         }
-                    } catch (Exception lEx) {
+                    } catch (RuntimeException lEx) {
                         mLog.error(
                                 (mServer instanceof SSLServerSocket
                                 ? "SSL" : "TCP") + " engine: "

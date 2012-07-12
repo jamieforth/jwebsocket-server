@@ -38,8 +38,7 @@ import org.springframework.context.ApplicationContext;
 public class TokenPlugIn extends BasePlugIn {
 
     private String mNamespace = null;
-    private static boolean mBeanFactoryLoaded = false;
-
+    
     /**
      *
      * @param aConfiguration

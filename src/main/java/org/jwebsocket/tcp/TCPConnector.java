@@ -79,7 +79,7 @@ public class TCPConnector extends BaseConnector {
 
             // @TODO: Make the timeout constructor argument configurable for the future
             mOutputStreamNIOSender = new TimeoutOutputStreamNIOWriter(this, mIn, mOut, 1000);
-        } catch (Exception lEx) {
+        } catch (IOException lEx) {
             mLog.error(lEx.getClass().getSimpleName()
                     + " instantiating "
                     + getClass().getSimpleName() + ": "
@@ -94,7 +94,10 @@ public class TCPConnector extends BaseConnector {
         try {
             lPort = mClientSocket.getPort();
             lTimeout = mClientSocket.getSoTimeout();
-        } catch (Exception lEx) {
+        } catch (IOException lEx) {
+            // FindBug: This method might ignore an exception.
+            // In general, exceptions should be handled or reported in some way,
+            // or they should be thrown out of the method.
         }
         String lNodeStr = getNodeId();
         if (lNodeStr != null) {
@@ -196,7 +199,7 @@ public class TCPConnector extends BaseConnector {
                     mClientSocket.shutdownInput();
                 }
             }
-        } catch (Exception lEx) {
+        } catch (IOException lEx) {
             mLog.error(Logging.getSimpleExceptionMessage(lEx, "shutting down reader stream (" + getId() + ")"));
         }
         try {
@@ -238,7 +241,7 @@ public class TCPConnector extends BaseConnector {
                 mLog.error("Trying to send to closed connection: "
                         + getId() + ", " + aDataPacket.getUTF8());
             }
-        } catch (Exception lEx) {
+        } catch (IOException lEx) {
             lExMsg = lEx.getMessage();
         }
         // if sending data leads to an exception ...
@@ -475,7 +478,7 @@ public class TCPConnector extends BaseConnector {
                             + mClientSocket.getPort()
                             + " due to handshake issues");
                 }
-            } catch (Exception lEx) {
+            } catch (IOException lEx) {
                 mLog.error(Logging.getSimpleExceptionMessage(lEx, "executing handshake"));
             }
             try {
@@ -540,7 +543,7 @@ public class TCPConnector extends BaseConnector {
                             if (mIn.available() > 0) {
                                 processHixie(aEngine);
                             }
-                        } catch (Exception lEx) {
+                        } catch (IOException lEx) {
                             mLog.error(lEx.getClass().getSimpleName()
                                     + " in processPacket of connector "
                                     + mConnector.getClass().getSimpleName()

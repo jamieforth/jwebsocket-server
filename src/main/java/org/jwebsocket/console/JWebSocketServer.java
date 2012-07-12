@@ -42,7 +42,7 @@ public class JWebSocketServer {
             // run server until shut down request
             JWebSocketFactory.run();
 
-        } catch (Exception lEx) {
+        } catch (RuntimeException lEx) {
             System.out.println(
                     lEx.getClass().getSimpleName()
                     + " on starting jWebSocket server: "

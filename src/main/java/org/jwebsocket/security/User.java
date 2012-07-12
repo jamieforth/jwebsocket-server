@@ -29,40 +29,40 @@ public class User {
     /**
      * The maximum number of login tries until the account gets locked.
      */
-    public static int MAX_PWD_FAIL_COUNT = 3;
+    public final static int MAX_PWD_FAIL_COUNT = 3;
     /**
      * The state of the user is unknown. This state is used only as default
      * when instantiating a new user. This value should not be saved.
      */
-    public static int ST_UNKNOWN = -1;
+    public final static int ST_UNKNOWN = -1;
     /**
      * The user is already registered but not activated.
      * A user needs to get activated to get access to the system.
      */
-    public static int ST_REGISTERED = 0;
+    public final static int ST_REGISTERED = 0;
     /**
      * The user is activated and has access to the system according to his 
      * rights and roles.
      */
-    public static int ST_ACTIVE = 1;
+    public final static int ST_ACTIVE = 1;
     /**
      * The user is (temporarily) inactive.
      * He needs to get (re-)activated to get access to the system.
      */
-    public static int ST_INACTIVE = 2;
+    public final static int ST_INACTIVE = 2;
     /**
      * The user is (temporarily) locked, eg due to too much logins 
      * with wrong credentials.
      * He needs to gets unlocked again to get access to the system.
      */
-    public static int ST_LOCKED = 3;
+    public final static int ST_LOCKED = 3;
     /**
      * The user is deleted, he can't log in and is not reachable for others.
      * The row is kept in the database for reference purposes only and
      * to keep the database consistent (eg for logs, journal or transactions).
      * He can be activated again to get access to the system.
      */
-    public static int ST_DELETED = 4;
+    public final static int ST_DELETED = 4;
     private Integer mUserId = null;
     private String mUUID = null;
     private String mLoginname = null;

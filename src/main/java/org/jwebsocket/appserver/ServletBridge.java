@@ -36,7 +36,8 @@ public class ServletBridge extends HttpServlet {
 
     // reference to the token server
     private static TokenServer mServer = null;
-    private static Logger mLog = null;
+    private static volatile Logger mLog = null;
+    private static final long serialVersionUID = 1L;
 
     private void mCheckLogs() {
         if (mLog == null) {

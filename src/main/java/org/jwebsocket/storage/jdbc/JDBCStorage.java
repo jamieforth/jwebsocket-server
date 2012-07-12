@@ -57,11 +57,11 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
     /**
      * Name to register for this Store, used for logging.
      */
-    protected static String storeName = "JDBCStore";
+    protected final static String storeName = "JDBCStore";
     /**
      * Name to register for the background thread.
      */
-    protected String threadName = "JDBCStore";
+    protected final String threadName = "JDBCStore";
     /**
      * The connection username to use when trying to connect to the database.
      */
@@ -232,7 +232,7 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
      *
      * @param table The new table
      */
-    public void setTableName(String table) {
+    public synchronized void setTableName(String table) {
         this.tableName = table;
     }
 
@@ -306,13 +306,16 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
                 try {
                     if (preparedKeysSql == null) {
                         String keysSql =
-                                "SELECT " + keyColumnName
-                                + " FROM " + tableName
-                                + " WHERE " + appColumnName + " = ?";
+                                "SELECT ?"
+                                + " FROM ?"
+                                + " WHERE ? = ?";
                         preparedKeysSql = _conn.prepareStatement(keysSql);
                     }
 
-                    preparedKeysSql.setString(1, getAppColumnName());
+                    preparedKeysSql.setString(1,keyColumnName);
+                    preparedKeysSql.setString(2,tableName);
+                    preparedKeysSql.setString(3,appColumnName);
+                    preparedKeysSql.setString(4, getAppColumnName());
                     lRst = preparedKeysSql.executeQuery();
                     if (lRst != null) {
                         while (lRst.next()) {
@@ -359,11 +362,16 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
                 }
                 try {
                     if (preparedSizeSql == null) {
-                        String sizeSql = "SELECT COUNT(" + keyColumnName + ") FROM " + tableName + " WHERE " + appColumnName + " = ?";
+                        String sizeSql = "SELECT COUNT(?)"
+                                + " FROM ?"
+                                + " WHERE ? = ?";
                         preparedSizeSql = _conn.prepareStatement(sizeSql);
                     }
 
-                    preparedSizeSql.setString(1, getAppColumnName());
+                    preparedSizeSql.setString(1, keyColumnName);
+                    preparedSizeSql.setString(2, tableName);
+                    preparedSizeSql.setString(3, appColumnName);
+                    preparedSizeSql.setString(4, getAppColumnName());
                     rst = preparedSizeSql.executeQuery();
                     if (rst.next()) {
                         size = rst.getInt(1);
@@ -430,12 +438,17 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
                     }
                     // Break out after the finally block
                     numberOfTries = 0;
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     // TODO: log the error
                     if (dbConnection != null) {
                         close(dbConnection);
                     }
-                } finally {
+                } catch (IOException e) {
+                    // TODO report IOException
+                } catch (ClassNotFoundException e) {
+                    // TODO report ClassNotFoundException
+                }
+                finally {
                     try {
                         if (rst != null) {
                             rst.close();
@@ -591,9 +604,7 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
                     if (dbConnection != null) {
                         close(dbConnection);
                     }
-                } catch (/*
-                         * IO
-                         */Exception e) {
+                } catch (IOException e) {
                     // Ignore
                     // System.out.println(e.getMessage());
                 } finally {
@@ -633,9 +644,6 @@ public class JDBCStorage extends BaseStorage<Object, Object> {
             if (dbConnection == null || dbConnection.isClosed()) {
                 // TODO: log info level
                 open();
-                if (dbConnection == null || dbConnection.isClosed()) {
-                    // TODO: log info level fail
-                }
             }
         } catch (SQLException ex) {
             // TODO: log error

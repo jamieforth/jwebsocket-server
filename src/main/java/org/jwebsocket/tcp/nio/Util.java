@@ -48,7 +48,9 @@ public class Util {
         if (lKeyStorePath != null) {
             char[] lPassword = aKeyStorePassword.toCharArray();
             URL lURL = JWebSocketConfig.getURLFromPath(lKeyStorePath);
-            lKeyStore.load(new FileInputStream(lURL.getPath()), lPassword);
+            FileInputStream fis = new FileInputStream(lURL.getPath());
+            lKeyStore.load(fis, lPassword);
+            fis.close();
             lKMF.init(lKeyStore, lPassword);
 
             lSSLContext.init(lKMF.getKeyManagers(), null, new java.security.SecureRandom());

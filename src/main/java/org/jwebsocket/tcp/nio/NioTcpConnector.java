@@ -120,7 +120,7 @@ public class NioTcpConnector extends BaseConnector {
     public void flushPacket(WebSocketPacket aPacket) {
         try {
             getEngine().processPacket(this, aPacket);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             mLog.error(e.getClass().getSimpleName()
                     + " in processPacket of connector "
                     + getClass().getSimpleName(), e);

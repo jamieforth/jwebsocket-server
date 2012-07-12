@@ -118,7 +118,7 @@ public class TokenFilterChain extends BaseFilterChain {
             if (lFilter.getEnabled()) {
                 try {
                     ((TokenFilter) lFilter).processTokenIn(lFilterResponse, aConnector, aToken);
-                } catch (Exception lEx) {
+                } catch (RuntimeException lEx) {
                     mLog.error(lEx.getClass().getSimpleName()
                             + " in incoming filter: " + lFilter.getId()
                             + ": " + lEx.getMessage());
@@ -144,7 +144,7 @@ public class TokenFilterChain extends BaseFilterChain {
             if (lFilter.getEnabled()) {
                 try {
                     ((TokenFilter) lFilter).processTokenOut(lFilterResponse, aSource, aTarget, aToken);
-                } catch (Exception lEx) {
+                } catch (RuntimeException lEx) {
                     mLog.error(lEx.getClass().getSimpleName()
                             + " in outgoing filter: " + lFilter.getId()
                             + ": " + lEx.getMessage());

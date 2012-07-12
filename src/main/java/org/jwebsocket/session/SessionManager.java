@@ -90,6 +90,7 @@ public class SessionManager implements ISessionManager {
             return mSessionsReferences.get(aSessionId);
         }
 
+        // FindBug: mReconnectionManager not initialized in any constructor. May be null.
         if (mReconnectionManager.isExpired(aSessionId)) {
             if (mLog.isDebugEnabled()) {
                 mLog.debug("Creating a blank storage for session: " + aSessionId + "...");
@@ -106,6 +107,7 @@ public class SessionManager implements ISessionManager {
             // Recovered session, require to be removed from the trash
             mReconnectionManager.getSessionIdsTrash().remove(aSessionId);
 
+            // FindBug: mReconnectionManager not initialized in any constructor. May be null.
             IBasicStorage<String, Object> lStorage = mStorageProvider.getStorage(aSessionId);
             mSessionsReferences.put(aSessionId, lStorage);
 

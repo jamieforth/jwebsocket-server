@@ -56,12 +56,17 @@ public class DelayedPacketsQueue {
                         lConnector.setWorkerId(Thread.currentThread().hashCode());
 
                         return lPacket;
-                    } catch (Exception lEx) {
+                    } catch (RuntimeException lEx) {
                         // ignore it. the connector was stopped in the middle
                     }
                 }
             }
             // CPU release
+            // FindBug: This method calls Thread.sleep() with a lock held. 
+            // This may result in very poor performance and scalability, or a deadlock, 
+            // since other threads may be waiting to acquire the lock. It is a much better
+            // idea to call wait() on the lock, which releases the lock and allows
+            // other threads to run.
             Thread.sleep(5);
         }
     }

@@ -16,6 +16,7 @@
 package org.jwebsocket.plugins.system;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -154,7 +155,7 @@ public class SystemPlugIn extends TokenPlugIn {
                     mLog.info("System plug-in successfully instantiated.");
                 }
             }
-        } catch (Exception lEx) {
+        } catch (RuntimeException lEx) {
             mLog.error(Logging.getSimpleExceptionMessage(lEx, "instantiating system plug-in"));
         }
     }
@@ -280,6 +281,8 @@ public class SystemPlugIn extends TokenPlugIn {
             synchronized (this) {
                 //Removing the local cached  storage instance. 
                 //Free space if the client never gets reconnected.
+                
+                // FindBug: This instanceof test will always return true (unless the value being tested is null).
                 if (mSessionManager instanceof SessionManager) {
                     ((SessionManager) mSessionManager).getSessionsReferences().remove(lSessionId);
                 }
@@ -466,7 +469,7 @@ public class SystemPlugIn extends TokenPlugIn {
         lGoodBye.setString("version", JWebSocketServerConstants.VERSION_STR);
         lGoodBye.setString("sourceId", aConnector.getId());
         if (aCloseReason != null) {
-            lGoodBye.setString("reason", aCloseReason.toString().toLowerCase());
+            lGoodBye.setString("reason", aCloseReason.toString().toLowerCase(Locale.ENGLISH));
         }
 
         // don't send session-id on goodbye, neither required nor desired
@@ -831,7 +834,7 @@ public class SystemPlugIn extends TokenPlugIn {
             }
             try {
                 Thread.sleep(lDuration);
-            } catch (Exception lEx) {
+            } catch (InterruptedException lEx) {
                 // ignore potential exception here!
             }
             lResponse.setInteger("duration", lDuration);
@@ -959,7 +962,7 @@ public class SystemPlugIn extends TokenPlugIn {
         try {
             AuthenticationProvider lAuthProvider = getAuthProvider();
             lAuthResult = lAuthProvider.authenticate(lAuthRequest);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             String lMsg = ex.getClass().getSimpleName() + ": " + ex.getMessage();
             Token lResponse = getServer().createErrorToken(aToken, -1, lMsg);
             sendToken(aConnector, aConnector, lResponse);
