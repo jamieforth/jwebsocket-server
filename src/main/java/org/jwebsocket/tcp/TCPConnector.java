@@ -603,14 +603,22 @@ public class TCPConnector extends BaseConnector {
                         mCloseReason = CloseReason.CLIENT;
                         setStatus(WebSocketConnectorStatus.DOWN);
 
-                        // As per spec, server must respond to CLOSE with acknowledgment CLOSE (maybe
-                        // this should be handled higher up in the hierarchy?)
+                        // As per spec, server must respond to CLOSE with
+                        // acknowledgement CLOSE (maybe this should be handled
+                        // higher up in the hierarchy?).
                         WebSocketPacket lClose = new RawPacket("");
                         lClose.setFrameType(WebSocketFrameType.CLOSE);
                         sendPacket(lClose);
                         // the streams are closed in the run method
                     } else {
-                        mLog.error("Unknown frame type '" + lPacket.getFrameType() + "', ignoring frame.");
+                        mLog.error("Unknown frame type '" + lPacket.getFrameType()
+                                + "', closing connection.");
+                        // Close on unknown frame types: required by hybi 10+. 
+                        mCloseReason = CloseReason.SERVER;
+                        setStatus(WebSocketConnectorStatus.DOWN);
+                        WebSocketPacket lClose = new RawPacket("");
+                        lClose.setFrameType(WebSocketFrameType.CLOSE);
+                        sendPacket(lClose);
                     }
                 } catch (SocketTimeoutException lEx) {
                     mLog.error(lEx.getClass().getSimpleName() + " reading hybi (" + getId() + "): " + lEx.getMessage());
