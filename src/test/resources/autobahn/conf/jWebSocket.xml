@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Document   : AutobahnTestServer.xml
+Created on : July 12, 2012
+Author     : Jamie Forth
+Description: Configuration of a jWebSocket Server for the Autobahn
+Test Suite, based on provided jWebSocket.xml.
+-->
+
+<!-- FIXME: It is ridiculous to have to rely on xml configuration, 
+    but programmatic configuration seems quite broken (see errors 
+    from running JWebSocketEmbedded - which is still unnecessary 
+    verbose). Plus, xml configuration requires defining plug-ins,
+    filters, users, permissions etc., all of which should be 
+    optional. -->
+
+<!-- jWebSocket server configuration -->
+<jWebSocket>
+  <!--
+      Installation can be prod (default) or dev. 'prod': load all
+      classes from the jars defined in this configuration file. FIXME:
+      Is this even true? 'dev': run directly from the source, all the
+      jar files given are ignored.
+  -->
+  <installation>dev</installation>
+
+  <!--
+      Define the protocol: json (default), xml, or csv.
+  -->
+  <protocol>json</protocol>
+
+  <!--
+      The unique ID of this instance within a jWebSocket cluster can
+      be left empty to run just a single stand-alone server
+      Preparation for pending cluster-plug-in.
+  -->
+  <node_id>01</node_id>
+
+  <!-- jWebSocket logging configuration -->
+  <logging>
+    <log4j>
+      <!-- Automatic reload of log config options in ms (0 for none,
+           minimum 5000ms) -->
+      <autoreload>20000</autoreload>
+    </log4j>
+  </logging>
+
+  <!-- jWebSocket engine configuration -->
+  <engines>
+    <!-- TCP Engine Configuration -->
+    <engine>
+      <name>org.jwebsocket.tcp.TCPEngine</name>
+      <id>tcp0</id>
+      <jar>jWebSocketTCPEngine-1.0.jar</jar>
+      <port>8787</port>
+      <sslport>9797</sslport>
+      <!-- keystore file with in ${JWEBSOCKET_HOME}conf -->
+      <keystore>${JWEBSOCKET_HOME}conf/jWebSocket.ks</keystore>
+      <!-- password to access keystore file -->
+      <password>jWebSocket</password>
+
+      <!-- Allow unstricted access. -->
+      <domains>
+        <domain>*</domain>
+      </domains>
+
+      <!-- Default session timeout 1h. -->
+      <timeout>0</timeout>
+
+      <!-- Maximum size of the data packet that the engine will read,
+           if the frame size is larger than this the connection will
+           be closed.
+      -->
+      <maxframesize>1048840</maxframesize>
+      
+      <!-- Maximun number of connections allowed by this engine. -->
+      <maxconnections>10000</maxconnections>
+      
+      <!-- On max connections reached strategy: wait, close, reject,
+           or redirect. -->
+      <onmaxconnections>reject</onmaxconnections>
+    </engine>
+  </engines>
+
+  <!-- server types to be instantiated for jWebSocket -->
+  <servers>
+    <server>
+      <name>org.jwebsocket.server.AutobahnTestServer</name>
+      <id>ts0</id>
+      <jar>jWebSocketTokenServer-1.0.jar</jar>
+      <!-- 
+           Define the thread pool properties. Thread are spawned when
+           Token's spawnThread value is true Queue sizes and maximum
+           pool sizes may be traded off for each other: Using large
+           queues and small pools minimizes CPU usage, OS resources,
+           and context-switching overhead, but can lead to
+           artificially low throughput.  If tasks frequently block
+           (for example if they are I/O bound), a system may be able
+           to schedule time for more threads than you otherwise allow.
+           Use of small queues generally requires larger pool sizes,
+           which keeps CPUs busier but may encounter unacceptable
+           scheduling overhead, which also decreases throughput.
+      -->
+      <threadPool>
+        <!--  number of thread that are "waiting" even if the queue is empty  -->
+        <corePoolSize>10</corePoolSize>
+        <!--  number maximum of thread that can be running at the same time -->
+        <maximumPoolSize>100</maximumPoolSize>
+        <!--  time before the destruction of "free" threads (seconds) -->
+        <keepAliveTime>60</keepAliveTime>
+        <!-- size of the blocking queue. Connection will be refused if
+             the queue is full and the poolsize is equals to the
+             maximumPoolSize. -->
+        <blockingQueueSize>1000</blockingQueueSize>
+      </threadPool>
+    </server>
+  </servers>
+
+<rights>
+  <!-- configuration of system plug-in specific rights -->
+  <right>
+    <ns>org.jwebsocket.plugins.system</ns>
+    <id>broadcast</id>
+    <description>Broadcast message to all other clients.</description>
+  </right>
+</rights>
+
+<roles>
+  <role>
+    <id>Guest</id>
+    <description>Anonymous users (not registered)</description>
+    <rights>
+      <!-- list of rights for "Guest" role (ns + . + id) -->
+      <right>org.jwebsocket.plugins.system.broadcast</right>
+    </rights>
+  </role>
+</roles>
+
+<users>
+  <user>
+    <uuid>000-000-001-2011-07-14-11-32-40-223</uuid>
+    <loginname>guest</loginname>
+    <firstname>jWebSocket Guest User</firstname>
+    <lastname>(Guest Role)</lastname>
+    <password>guest</password>
+    <description>jWebSocket Guest User</description>
+    <status>1</status>
+    <roles>
+      <role>Guest</role>
+    </roles>
+  </user>
+</users>
+
+  <!-- plug-ins to be instantiated for jWebSocket -->
+  <plugins>
+    <plugin>
+      <name>FIXME.this.should.not.be.required</name>
+      <id>FIXME</id>
+      <ns>FIXME</ns>
+      <jar>FIXME</jar>
+      <server-assignments>
+        <server-assignment>ts0</server-assignment>
+      </server-assignments>
+    </plugin>
+  </plugins>
+
+  <!-- filters to be instantiated for jWebSocket -->
+  <filters>
+    <filter>
+      <name>FIXME.this.should.not.be.required</name>
+      <id>FIXME</id>
+      <ns>FIXME</ns>
+      <jar>FIXME</jar>
+      <server-assignments>
+        <server-assignment>ts0</server-assignment>
+      </server-assignments>
+    </filter>
+  </filters>
+
+</jWebSocket>

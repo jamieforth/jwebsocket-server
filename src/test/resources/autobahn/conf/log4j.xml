@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <!-- for details of this file format and content please refer to
+       http://wiki.apache.org/logging-log4j/Log4jXmlFormat -->
+
+  <!-- FIXME: why are files adminLog.log and jmxLog.log still created
+       despite this configuration being read? -->
+
+  <appender name="developmentLog" class="org.apache.log4j.ConsoleAppender">
+    <param name="threshold" value="debug"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p - %C{1}: %m%n" />
+    </layout>
+  </appender>
+  
+  <logger name="org.jwebsocket" additivity="false">
+    <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+    <level value="DEBUG"/>
+    <!--  select one of the above declared appenders -->
+    <appender-ref ref="developmentLog"/>
+  </logger>
+  
+  <root>
+    <!-- TRACE, DEBUG, INFO, WARN, ERROR or FATAL --> 
+    <priority value="DEBUG" />
+    <appender-ref ref="developmentLog"/>
+  </root>
+
+</log4j:configuration>

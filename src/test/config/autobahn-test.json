@@ -1,0 +1,10 @@
+{
+   "options": {"failByDrop": false},
+   "outdir": "./reports/servers",
+
+   "servers": [{"agent": "jWebSocketServer", "url": "ws://localhost:8787", "options": {"version": 10}}],
+
+   "cases": ["*"],
+   "exclude-cases": [],
+   "exclude-agent-cases": {}
+}
