@@ -592,7 +592,17 @@ public class TCPConnector extends BaseConnector {
                         if (mIn.available() > 0) {
                             processHybi(aVersion, aEngine);
                         }
-                    } else if (WebSocketFrameType.PING.equals(lPacket.getFrameType())) {
+                    }  else if (WebSocketFrameType.BINARY.equals(lPacket.getFrameType())) {
+                        if (mLog.isDebugEnabled()) {
+                            mLog.debug("Processing 'binary' frame from " + lFrom + "...");
+                        }
+                        // FIXME: How is TEXT vs. BINARY intended to be handled?
+                        // Are both TEXT (in which case they MUST be UTF-8) and
+                        // BINARY both "packets"?
+                        aEngine.processPacket(mConnector, lPacket);
+                        // FIXME: Reading pending packets in the buffer here?
+                    }
+                    else if (WebSocketFrameType.PING.equals(lPacket.getFrameType())) {
                         if (mLog.isDebugEnabled()) {
                             mLog.debug("Processing 'ping' frame from " + lFrom + "...");
                         }
