@@ -601,14 +601,20 @@ public class TCPConnector extends BaseConnector {
                         // BINARY both "packets"?
                         aEngine.processPacket(mConnector, lPacket);
                         // FIXME: Reading pending packets in the buffer here?
-                    }
-                    else if (WebSocketFrameType.PING.equals(lPacket.getFrameType())) {
+                    } else if (WebSocketFrameType.PING.equals(lPacket.getFrameType())) {
                         if (mLog.isDebugEnabled()) {
                             mLog.debug("Processing 'ping' frame from " + lFrom + "...");
                         }
-                        WebSocketPacket lPong = new RawPacket("");
-                        lPong.setFrameType(WebSocketFrameType.PONG);
+                        WebSocketPacket lPong = new RawPacket(WebSocketFrameType.PONG, "");
                         sendPacket(lPong);
+                        // FIXME: Currently reply with a pong, but should be
+                        // handled by the engine.
+                    } else if (WebSocketFrameType.PONG.equals(lPacket.getFrameType())) {
+                        if (mLog.isDebugEnabled()) {
+                            mLog.debug("Received 'pong' frame from " + lFrom + "...");
+                        }
+                        // FIXME: Currently do nothing, but should be handled by
+                        // the engine.
                     } else if (WebSocketFrameType.CLOSE.equals(lPacket.getFrameType())) {
                         if (mLog.isDebugEnabled()) {
                             mLog.debug("Processing 'close' frame from " + lFrom + "...");
@@ -619,8 +625,7 @@ public class TCPConnector extends BaseConnector {
                         // As per spec, server must respond to CLOSE with
                         // acknowledgement CLOSE (maybe this should be handled
                         // higher up in the hierarchy?).
-                        WebSocketPacket lClose = new RawPacket("");
-                        lClose.setFrameType(WebSocketFrameType.CLOSE);
+                        WebSocketPacket lClose = new RawPacket(WebSocketFrameType.CLOSE, "");
                         sendPacket(lClose);
                         // the streams are closed in the run method
                     } else {
