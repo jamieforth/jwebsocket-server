@@ -7,11 +7,11 @@ Description: Configuration of a jWebSocket Server for the Autobahn
 Test Suite, based on provided jWebSocket.xml.
 -->
 
-<!-- FIXME: It is ridiculous to have to rely on xml configuration, 
-    but programmatic configuration seems quite broken (see errors 
-    from running JWebSocketEmbedded - which is still unnecessary 
+<!-- FIXME: It is ridiculous to have to rely on xml configuration,
+    but programmatic configuration seems quite broken (see errors
+    from running JWebSocketEmbedded - which is still unnecessary
     verbose). Plus, xml configuration requires defining plug-ins,
-    filters, users, permissions etc., all of which should be 
+    filters, users, permissions etc., all of which should be
     optional. -->
 
 <!-- jWebSocket server configuration -->
@@ -72,10 +72,10 @@ Test Suite, based on provided jWebSocket.xml.
            be closed.
       -->
       <maxframesize>1048840</maxframesize>
-      
+
       <!-- Maximun number of connections allowed by this engine. -->
       <maxconnections>10000</maxconnections>
-      
+
       <!-- On max connections reached strategy: wait, close, reject,
            or redirect. -->
       <onmaxconnections>reject</onmaxconnections>
@@ -88,7 +88,7 @@ Test Suite, based on provided jWebSocket.xml.
       <name>org.jwebsocket.server.AutobahnTestServer</name>
       <id>ts0</id>
       <jar>jWebSocketTokenServer-1.0.jar</jar>
-      <!-- 
+      <!--
            Define the thread pool properties. Thread are spawned when
            Token's spawnThread value is true Queue sizes and maximum
            pool sizes may be traded off for each other: Using large
