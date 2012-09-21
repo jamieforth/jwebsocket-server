@@ -149,6 +149,10 @@ public class TimeoutOutputStreamNIOWriter {
             this.mPacket = aDataPacket;
         }
 
+        public void setTimeoutTask(TimerTask task) {
+            mTimeoutTask = task;
+        }
+
         @Override
         public Object call() throws Exception {
             // @TODO This always is being executed quickly even when the connector get's stopped
@@ -165,6 +169,7 @@ public class TimeoutOutputStreamNIOWriter {
             }
             // FindBug: mTimeoutTask field is never initialized within any constructor
             // and is therefore could be null after the object is constructed.
+            // It is set when TimeoutTimerTask is constructed.
             mTimeoutTask.cancel();
             return null;
         }
@@ -176,7 +181,7 @@ public class TimeoutOutputStreamNIOWriter {
 
         public TimeoutTimerTask(SendOperation aSendOperation) {
             this.mSendOperation = aSendOperation;
-            this.mSendOperation.mTimeoutTask = this;
+            this.mSendOperation.setTimeoutTask(this);
         }
 
         @Override
