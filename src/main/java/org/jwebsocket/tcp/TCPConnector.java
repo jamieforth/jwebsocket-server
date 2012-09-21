@@ -607,14 +607,12 @@ public class TCPConnector extends BaseConnector {
                         }
                         WebSocketPacket lPong = new RawPacket(WebSocketFrameType.PONG, "");
                         sendPacket(lPong);
-                        // FIXME: Currently reply with a pong, but should be
-                        // handled by the engine.
+                        // Reply with a pong.
                     } else if (WebSocketFrameType.PONG.equals(lPacket.getFrameType())) {
                         if (mLog.isDebugEnabled()) {
                             mLog.debug("Received 'pong' frame from " + lFrom + "...");
                         }
-                        // FIXME: Currently do nothing, but should be handled by
-                        // the engine.
+                        // Do nothing.
                     } else if (WebSocketFrameType.CLOSE.equals(lPacket.getFrameType())) {
                         if (mLog.isDebugEnabled()) {
                             mLog.debug("Processing 'close' frame from " + lFrom + "...");
@@ -681,4 +679,5 @@ public class TCPConnector extends BaseConnector {
         }
         return lRes + ")";
     }
+
 }
