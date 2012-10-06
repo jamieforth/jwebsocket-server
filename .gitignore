@@ -27,3 +27,6 @@ nbproject/*
 Servers/
 bin/
 gen/
+
+# Autobahn test repots
+reports
